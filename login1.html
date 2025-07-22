@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Perfeito</title>
-    <!-- Inclui o Tailwind CSS para estilização chique, bicha! -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 
@@ -29,24 +28,19 @@
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <!-- O retângulo principal, todo divo e centralizado, pelo amor da deusa! -->
     <div class="w-[393px] h-[852px] border-4 border-black rounded-3xl
                  flex flex-col items-center justify-center p-8 bg-white shadow-xl space-y-6">
 
-        <!-- A logo do Unilink, porque a gente adora um glow up! -->
         <img src="img/logo_unilink.png" alt="Logo Unilink" class="rounded-lg mb-0"
              onerror="this.onerror=null;this.src='https://placehold.co/236x229/000000/FFFFFF?text=LOGO+UNILINK';"
              style="width: 236px; height: 229px;">
 
-        <!-- Aquele título pra você fazer seu login, viu? -->
         <h2 class="text-2xl font-semibold text-gray-800 !mt-4">Faça seu login:</h2>
 
-        <!-- Caixa de texto para o Email, redondinha do jeito que a gente ama -->
         <input type="email" id="emailInput" placeholder="Email @edu.unirio.br"
                class="input-button-size border-2 border-gray-300 rounded-[18px] px-4 py-2 !mt-4
                       focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700">
 
-        <!-- Div para a Senha com o botão de visualizar, porque a gente é discreta, mas nem tanto! -->
         <div class="relative input-button-size !mt-4">
             <input type="password" id="passwordInput" placeholder="Senha"
                    class="w-full h-full border-2 border-gray-300 rounded-[18px] px-4 py-2 pr-10
@@ -57,21 +51,17 @@
             </button>
         </div>
 
-        <!-- Espaço para a mensagem de erro, porque a gente não usa alert, a gente é sofisticada! -->
         <div id="errorMessage" class="text-red-500 text-sm hidden !mt-4"></div>
 
-        <!-- Botão "Entrar", pra você meter as caras no sistema -->
         <button id="loginButton" class="input-button-size bg-[#4f603e] text-white font-bold rounded-[18px] !mt-4
-                               hover:bg-opacity-90 transition duration-300 ease-in-out">
+                                       hover:bg-opacity-90 transition duration-300 ease-in-out">
             Entrar
         </button>
 
-        <!-- Separador dramático, porque a vida é feita de escolhas, bicha! -->
         <div class="text-gray-500 !mt-4">--------- Ou ---------</div>
 
-        <!-- Botão "Criar uma conta", com aquela transparência charmosa e direcionado! -->
         <button id="createAccountButton" class="input-button-size bg-[#e5a1ae] bg-opacity-100 text-white font-bold rounded-[18px] !mt-4
-                               hover:bg-opacity-75 transition duration-300 ease-in-out">
+                                       hover:bg-opacity-75 transition duration-300 ease-in-out">
             Criar uma conta
         </button>
     </div>
@@ -95,16 +85,29 @@
             const email = emailInput.value;
             const password = passwordInput.value;
 
+            // Variáveis para controlar os erros, bicha!
+            let hasError = false;
+
             // Validação de luxo!
-            if (email === "ana.cristina@edu.unirio.br" && password === "adm123") {
-                window.location.href = "home1.html"; // Redireciona para a home, porque você merece!
-            } else if (email === "" && password === "") {
-                errorMessageDiv.textContent = 'Preencha todos os dados!'; // Ah, não deu! Avisa que deu ruim!
+            if (!email.includes('@edu.unirio.br')) {
+                errorMessageDiv.textContent = 'Email não é da UNIRIO!';
+                hasError = true;
+            } else if (email !== 'thiago.ivo@edu.unirio.br' && email !== 'ana.cristina@edu.unirio.br') {
+                errorMessageDiv.textContent = 'Email não registrado!';
+                hasError = true;
+            } else if (password !== 'adm123') {
+                errorMessageDiv.textContent = 'Senha inválida!';
+                hasError = true;
+            } else if (email === '' || password === '') { // Adicionei essa verificação para campos vazios
+                errorMessageDiv.textContent = 'Preencha todos os dados!';
+                hasError = true;
+            }
+
+            if (hasError) {
                 errorMessageDiv.classList.remove('hidden');
-            } 
-            else {
-                errorMessageDiv.textContent = 'Dados inválidos'; // Ah, não deu! Avisa que deu ruim!
-                errorMessageDiv.classList.remove('hidden');
+            } else {
+                // Se tudo estiver DIVINO, redireciona, porque você merece!
+                window.location.href = "home1.html";
             }
         });
 

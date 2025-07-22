@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Unilink</title>
-    <!-- Inclui o Tailwind CSS, porque a gente não vive sem esse luxo! -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -93,63 +92,50 @@
     </style>
 </head>
 <body>
-    <!-- O contêiner principal, com todo o charme do nosso retângulo e borda! -->
     <div class="w-[393px] h-[852px] border-4 border-black rounded-3xl
                  flex flex-col bg-white shadow-xl overflow-hidden relative">
-        <!-- Adicionado ID para o header para manipulação via JS -->
         <header id="mainHeader" class="h-[75px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md transition-all duration-300">
             <div class="h-full flex items-center">
-            <!-- Título ou logo -->
-                <span class="text-white font-bold text-[25px]">unilink</span>
+            <span class="text-white font-bold text-[25px]">unilink</span>
             </div>
 
             <div class="h-full flex items-center">
-    <!-- Ícone de DM ou outro -->
-            <a href="dm1.html">
-                <img src="img/dm_icon.png" alt="Ícone de Mensagens Diretas" class=" w-[46px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/46x46/aaaaaa/FFFFFF?text=DM';"
-                     title="Mensagens Diretas">
-            </a>
+    <a href="dm1.html">
+                    <img src="img/dm_icon.png" alt="Ícone de Mensagens Diretas" class=" w-[46px] object-contain"
+                        onerror="this.onerror=null;this.src='https://placehold.co/46x46/aaaaaa/FFFFFF?text=DM';"
+                        title="Mensagens Diretas">
+                </a>
             </div>
         </header>
 
-        <!-- Conteúdo principal da página. O padding-top compensa o cabeçalho fixo. -->
         <main class="flex-grow overflow-y-auto overflow-x-hidden  relative z-0" id="main">
-            <!-- Retângulo da Timeline - AGORA COM O BOTÃO DE FILTRO DENTRO! -->
             <div class="w-[179px] h-[29px] bg-[#ff6479] rounded-14px flex items-center justify-between px-2 relative mx-auto mt-4 mb-4">
-                <!-- Alterado para flex-grow e flex-shrink-0 para melhor controle de espaço -->
                 <span id="timelineTitle" class="text-black font-bold text-[18px] text-left flex-grow flex-shrink-0 truncate">Timeline</span>
                 
-                <!-- Botão de Filtro com ícone, AGORA DENTRO DO RETÂNGULO E ALINHADO! -->
                 <button id="filterButton" class="w-[43px] h-[22px] bg-[#ffb5a6] rounded-14px
                                          flex items-center justify-center shadow-md ml-auto flex-shrink-0">
                     <img src="img/filtro_icon.png" alt="Ícone de Filtro" class="w-[15px] h-[15px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/15x15/ffb5a6/000000?text=F';"
-                         title="Filtro">
+                        onerror="this.onerror=null;this.src='https://placehold.co/15x15/ffb5a6/000000?text=F';"
+                        title="Filtro">
                 </button>
             </div>
 
-            <!-- Barra de Stories (sem scroll horizontal, os itens quebram linha se não couberem) -->
             <div class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
-                <!-- Story de Maria (com borda na nossa paleta e mini círculo de adição) -->
                 <div id="mariaStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-black flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="img/maria.png" alt="Story de Maria" class="w-[53px] h-[53px] rounded-full object-cover"
-                         onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
                     >
-                    <!-- Mini Círculo com + (para adicionar story) -->
                     <div id="mariaAddButton" class="absolute bottom-0 right-0 w-[20px] h-[20px] rounded-full bg-[#000080] border-[2px] border-white flex items-center justify-center -mb-1 -mr-1 cursor-pointer">
                         <span class="text-white font-bold text-sm">+</span>
                     </div>
                 </div>
 
-                <!-- Story do Ciclano (com borda azul marinho) -->
                 <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
-                         onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
                     >
                 </div>
 
-                <!-- Adicione mais stories aqui, se precisar de mais glamour! -->
                 <div class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center">
                     <img src="https://placehold.co/53x53/cccccc/000000?text=A" alt="Story do Amigo A" class="w-[53px] h-[53px] rounded-full object-cover"
                     >
@@ -160,81 +146,69 @@
                 </div>
             </div>
 
-            <!-- Contêiner do Tweet do Fulano -->
             <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="ccet" data-type="tweet">
-                <!-- Parte Superior do Tweet: Foto e Nome/Curso -->
                 <div class="flex items-center px-2">
                     <img src="img/fulano.png" alt="Foto de Perfil do Fulano" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
-                         onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=F';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=F';">
                     <span class="font-bold text-[14px] text-gray-800">Fulano - CCET - Sistemas de Informação</span>
                 </div>
-                <!-- Corpo do Tweet: Texto -->
                 <p class="text-[14px] text-justify text-gray-700 px-2 mt-1 mb-1 leading-tight">
                     gente, tô fazendo uma pesquisa pra IHC - Modelo de Usuário, podem responder se puderem? obrigado!
                     <a href="#" class="text-[#004aad] underline">bit.ly/unilink_rio</a>
                 </p>
-                <!-- Parte Inferior do Tweet: Ícones e Contagem de Likes -->
                 <div class="flex justify-between items-center px-2">
                     <img id="fulanoAddIcon" src="img/adicionar.png" alt="Ícone de Adicionar" class="w-[20px] h-[20px] object-contain cursor-pointer"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
                     <div class="flex items-center">
                         <img src="img/like.png" alt="Ícone de Curtir" class="w-[20px] h-[20px] object-contain mr-1"
-                             onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
                         <span class="font-bold text-[11px] text-gray-800">123</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Contêiner do Tweet do Ciclano -->
             <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="cch" data-type="tweet">
-                <!-- Parte Superior do Tweet: Foto e Nome/Curso -->
                 <div class="flex items-center px-2">
                     <img src="img/ciclano.png" alt="Foto de Perfil do Ciclano" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
-                         onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=C';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=C';">
                     <span class="font-bold text-[14px] text-gray-800">Ciclano - CCH - Biblioteconomia</span>
                 </div>
-                <!-- Retângulo Verde para Música/Mídia -->
                 <div class="w-[370px] h-[52px] bg-[#1ed760] rounded-lg flex items-center px-2 mx-auto my-2 relative">
                     <img src="img/marinasena.png" alt="Capa da Música Marina Sena" class="w-[40px] h-[40px] rounded object-cover mr-2"
-                         onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=MS';"
+                        onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=MS';"
                     >
                     <div class="flex flex-col justify-center flex-grow">
                         <span class="font-bold text-[13px] text-white">Escutando "Doçura (part. Çantamarta)"</span>
                         <span class="text-[13px] text-white mt-0.5">De Marina Sena</span>
                     </div>
-                    <!-- Botão de Ação no Retângulo Verde -->
                     <div class="absolute right-2 top-1/2 -translate-y-1/2 w-[20px] h-[20px] rounded-full border-[1px] border-black flex items-center justify-center bg-white">
                         <span class="text-black font-bold text-sm">+</span>
                     </div>
                 </div>
                 
-                <!-- Estrelas de Avaliação -->
                 <div class="star-rating flex justify-between w-[360px] mx-auto mt-1 mb-1" data-rating="0">
                     <img src="img/estrelaapagada.png" alt="Estrela 1" class="w-[25px] h-[25px]" data-value="1"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
                     <img src="img/estrelaapagada.png" alt="Estrela 2" class="w-[25px] h-[25px]" data-value="2"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
                     <img src="img/estrelaapagada.png" alt="Estrela 3" class="w-[25px] h-[25px]" data-value="3"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
                     <img src="img/estrelaapagada.png" alt="Estrela 4" class="w-[25px] h-[25px]" data-value="4"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
                     <img src="img/estrelaapagada.png" alt="Estrela 5" class="w-[25px] h-[25px]" data-value="5"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
                 </div>
             </div>
 
-            <!-- Contêiner do Tweet da Beltrana -->
             <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="cch" data-type="tweet">
-                <!-- Parte Superior do Tweet: Foto e Nome/Curso -->
                 <div class="flex items-center px-2">
                     <img src="img/beltrana.png" alt="Foto de Perfil da Beltrana" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
-                         onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=B';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=B';">
                     <span class="font-bold text-[14px] text-gray-800">Beltrana - CCH - História</span>
                 </div>
-                <!-- Retângulo Cinza Claro para Mídia -->
                 <div class="w-[370px] h-[52px] bg-gray-200 rounded-lg flex items-center px-2 mx-auto my-2 relative">
                     <img src="img/folha.png" alt="Capa de Livro/Leitura" class="w-[40px] h-[40px] rounded object-cover mr-2"
-                         onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=L';"
+                        onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=L';"
                     >
                     <div class="flex flex-col justify-center flex-grow">
                         <span class="font-bold text-[13px] text-gray-800">Lendo "Por flores e gramados"</span>
@@ -242,57 +216,48 @@
                     </div>
                 </div>
                 
-                <!-- Parte Inferior do Tweet: Ícones e Contagem de Likes -->
                 <div class="flex justify-between items-center px-2">
                     <img src="img/adicionar.png" alt="Ícone de Adicionar" class="w-[20px] h-[20px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
                     <div class="flex items-center">
                         <img src="img/like.png" alt="Ícone de Curtir" class="w-[20px] h-[20px] object-contain mr-1"
-                             onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
                         <span class="font-bold text-[11px] text-gray-800">123</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Contêiner do Tweet: Oportunidade de Emprego -->
             <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-type="job-opening">
-                <!-- Parte Superior do Tweet: Foto e Título -->
                 <div class="flex items-center px-2">
                     <div class="w-[44px] h-[44px] rounded-full bg-[#ff7a28] flex items-center justify-center mr-2">
                         <img src="img/trabalho.png" alt="Ícone de Trabalho" class="w-[40px] h-[40px] object-contain"
-                             onerror="this.onerror=null;this.src='https://placehold.co/40x40/cccccc/000000?text=TRB';">
+                            onerror="this.onerror=null;this.src='https://placehold.co/40x40/cccccc/000000?text=TRB';">
                     </div>
                     <span class="font-bold text-[14px] text-gray-800">Oportunidade de Emprego</span>
                 </div>
-                <!-- Corpo do Tweet: Texto -->
                 <p class="text-[14px] text-left text-gray-700 px-2 mt-1 mb-2 leading-tight">
                     Vaga de Estágio como Instrutor de TI
                 </p>
-                <!-- Parte Inferior do Tweet: Botão Azul Claro e Likes -->
                 <div class="flex justify-between items-center px-2 w-full">
                     <a href="http://www.vagas.com/instrutor_ti" target="_blank" class="w-[300px] h-[22px] bg-[#b7cee8] text-blue-800 rounded-14px flex items-center justify-center text-[14px] font-bold no-underline mr-2">
                         www.vagas.com/instrutor_ti
                     </a>
                     <div class="flex items-center flex-shrink-0">
                         <img src="img/like.png" alt="Ícone de Curtir" class="w-[20px] h-[20px] object-contain mr-1"
-                             onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
                         <span class="font-bold text-[11px] text-gray-800">123</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Espaço vazio para ativar o scroll -->
             <div class="w-[300px] h-[200px] bg-transparent mx-auto"></div>
         </main>
 
-        <!-- Overlay para escurecer o fundo do filtro (NÃO MUDAR) -->
         <div id="overlay" class="overlay"></div>
 
-        <!-- Retângulo de Filtro (NÃO MUDAR) -->
         <div id="filterMenu" class="absolute top-[88px] left-1/2 -translate-x-1/2
                                      w-[350px] h-[120px] bg-[#ffb5a6] rounded-14px
                                      shadow-lg p-3 z-30 hidden flex flex-col items-start justify-between">
-            <!-- Switch "Apenas vagas de emprego" -->
             <div class="flex items-center justify-between w-[calc(100%-20px)] mx-auto mt-2 mb-2">
                 <span class="text-black font-bold text-[20px] text-gray-800">Apenas vagas de emprego:</span>
                 <label class="relative inline-flex items-center cursor-pointer">
@@ -313,53 +278,45 @@
             </div>
         </div>
 
-        <!-- Rodapé DIVO! Fixo na parte inferior do contêiner principal (NÃO MUDAR) -->
         <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between  z-10">
-            <!-- Ícone Home -->
             <a href="home1.html" class="w-[78.6px] h-[60px] bg-[#657d4d] flex items-center justify-around">
                 <img src="img/home.png" alt="Ícone Home" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
             </a>
             
-            <!-- Ícone Pesquisar -->
             <a href="usuarios.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/pesquisar.png" alt="Ícone Pesquisar" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=P';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=P';">
             </a>
 
-            <!-- Ícone Jogaprolo -->
             <a href="jogaprolo.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/jogaprolo.png" alt="Ícone Jogaprolo" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
             </a>
 
-            <!-- Ícone Agenda -->
             <a href="agenda.html" class="w-[78.6px] h-[60px]  flex items-center justify-around">
                 <img src="img/agenda.png" alt="Ícone Agenda" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
             </a>
 
-            <!-- Ícone Seu Perfil -->
             <a href="seuperfil.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/seuperfil.png" alt="Ícone Seu Perfil" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=S';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=S';">
             </a>
         </footer>
-    
-        <!-- Botão Flutuante de Adição (CHAMA O CRIAR POST AGORA!) -->
+        
         <button id="createPostFab" class="absolute bottom-[80px] right-[20px] w-[50px] h-[50px] rounded-full bg-[#026dad] border-[2px] border-black flex items-center justify-center text-white text-3xl font-bold shadow-lg z-40">
             +
         </button>
 
     </div>
 
-    <!-- Sobreposição para o Story da Maria (Corrigida!) -->
     <div id="mariaStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
             <img src="img/mariastory.png" 
-                 alt="Story da Maria em Tela Cheia" 
-                 class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                 onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=IMAGEM+STORY+MARIA';">
+                alt="Story da Maria em Tela Cheia" 
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=IMAGEM+STORY+MARIA';">
             
             <button id="closeMariaStoryButton" class="absolute bottom-[20px] w-[148px] h-[33px] bg-[#002c5c] text-white font-bold text-[14px] rounded-14px flex items-center justify-center">
                 Voltar para home
@@ -367,68 +324,58 @@
         </div>
     </div>
 
-    <!-- Sobreposição para o Story do Ciclano (NOVO e com Swipe!) -->
     <div id="ciclanoStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <!-- Botão "Voltar para home" full-width -->
             <button id="closeCiclanoStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
                 Voltar para home
             </button>
             <img id="ciclanoStoryImage" src="img/storyciclano1.png" 
-                 alt="Story do Ciclano" 
-                 class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                 onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+CICLANO+1';">
+                alt="Story do Ciclano" 
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+CICLANO+1';">
             
-            <!-- Áreas de clique para navegação (esquerda/direita) -->
             <div class="story-click-area left" id="ciclanoStoryLeftClick"></div>
             <div class="story-click-area right" id="ciclanoStoryRightClick"></div>
             
-            <!-- Caixa de texto e botão de envio para Stories -->
             <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
                 <input type="text" id="ciclanoStoryInput" placeholder="Digite aqui"
                         class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <button id="ciclanoStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
-                    l<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
                 </button>
             </div>
-            <!-- Botão de Reação Flutuante - Agora em cima do botão de enviar -->
             <button id="ciclanoReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
                 <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
             </button>
-            <!-- Menu de Reações (Inicialmente Escondido) -->
             <div id="ciclanoReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
                 <button id="ciclanoReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
                     <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
                 </button>
                 <button id="ciclanoReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
                     <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Sobreposição para o Story do Amigo A (NOVO e com Swipe!) -->
     <div id="amigoAStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <!-- Botão "Voltar para home" full-width -->
             <button id="closeAmigoAStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
                 Voltar para home
             </button>
             <img id="amigoAStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A" 
-                 alt="Story do Amigo A" 
-                 class="w-full h- border-4 border-black rounded-3xl object-cover"
-                 onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A';">
+                alt="Story do Amigo A" 
+                class="w-full h- border-4 border-black rounded-3xl object-cover"
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A';">
             
-            <!-- Áreas de clique para navegação (esquerda/direita) -->
             <div class="story-click-area left" id="amigoAStoryLeftClick"></div>
             <div class="story-click-area right" id="amigoAStoryRightClick"></div>
             
-            <!-- Caixa de texto e botão de envio para Stories -->
             <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
                 <input type="text" id="amigoAStoryInput" placeholder="Digite aqui"
                         class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -438,42 +385,36 @@
                     </svg>
                 </button>
             </div>
-            <!-- Botão de Reação Flutuante -->
             <button id="amigoAReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
                 <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
             </button>
-            <!-- Menu de Reações (Inicialmente Escondido) -->
             <div id="amigoAReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
                 <button id="amigoAReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
                     <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
                 </button>
                 <button id="amigoAReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
                     <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Sobreposição para o Story do Amigo B (NOVO e com Swipe!) -->
     <div id="amigoBStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <!-- Botão "Voltar para home" full-width -->
             <button id="closeAmigoBStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
                 Voltar para home
             </button>
             <img id="amigoBStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B" 
-                 alt="Story do Amigo B" 
-                 class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                 onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B';">
+                alt="Story do Amigo B" 
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B';">
             
-            <!-- Áreas de clique para navegação (esquerda/direita) -->
             <div class="story-click-area left" id="amigoBStoryLeftClick"></div>
             <div class="story-click-area right" id="amigoBStoryRightClick"></div>
             
-            <!-- Caixa de texto e botão de envio para Stories -->
             <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
                 <input type="text" id="amigoBStoryInput" placeholder="Digite aqui"
                         class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -483,66 +424,66 @@
                     </svg>
                 </button>
             </div>
-            <!-- Botão de Reação Flutuante -->
             <button id="amigoBReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
                 <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
             </button>
-            <!-- Menu de Reações (Inicialmente Escondido) -->
             <div id="amigoBReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
                 <button id="amigoBReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
                     <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
                 </button>
                 <button id="amigoBReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
                     <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                         onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Sobreposição para a Tela de Criar Post -->
     <div id="createPostOverlay" class="create-post-overlay hidden ">
         <div class="content-wrapper">
-            <!-- Cabeçalho da Tela de Criar Post -->
             <header class="w-full h-[60px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md z-10">
                 <button id="closeCreatePostButton" class="text-white text-2xl font-bold">
-                    &larr; <!-- Seta para a esquerda -->
-                </button>
+                    &larr; </button>
                 <div class="text-white font-bold text-[25px]">unilink</div>
-                <button id="sendPostButton" class="text-white font-bold text-[20px]">
-                    Enviar
+                <button id="publishPostButton" class="text-white font-bold text-[20px]">
+                    Publicar Post
                 </button>
             </header>
 
-            <!-- Área de Texto para Nova Publicação -->
             <main class="flex-grow p-4 bg-[#FFFFFF] ">
                 <textarea id="postContentInput" placeholder="O que você está fazendo?"
-                           class="w-full h-[150px]  rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
+                               class="w-full h-[150px]  rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
+                
+                <div id="attachedMediaPreview" class="mt-4 hidden">
+                    <img id="previewImage" src="" alt="Pré-visualização da imagem" class="max-w-full max-h-48 object-contain rounded-md mx-auto hidden">
+                    <p id="previewFileName" class="text-gray-700 text-center mt-2 hidden"></p>
+                </div>
             </main>
 
-            <!-- Rodapé com Ícones de Mídia -->
-            <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between   top-2 px-1 z-10">
-                <div class="flex flex-col items-center">
-                    <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain cursor-pointer"
-                         onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
+            <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between    top-2 px-1 z-10">
+                <div class="flex flex-col items-center cursor-pointer" id="attachImageButton">
+                    <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain"
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
                     <span class="text-black text-[18px]">Imagem</span>
+                    <input type="file" id="imageFileInput" accept="image/*" class="hidden">
                 </div>
-                <div class="flex flex-col items-center">
-                    <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain cursor-pointer"
-                         onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
+                <div class="flex flex-col items-center cursor-pointer" id="attachBookButton">
+                    <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain"
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
                     <span class="text-black text-[18px]">Livro</span>
                 </div>
-                <div class="flex flex-col items-center">
-                    <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain cursor-pointer"
-                         onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
+                <div class="flex flex-col items-center cursor-pointer" id="attachMusicButton">
+                    <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain"
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
                     <span class="text-black text-[18px]">Música</span>
                 </div>
-                <div class="flex flex-col items-center">
-                    <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain cursor-pointer"
-                         onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
+                <div class="flex flex-col items-center cursor-pointer" id="attachFileButton">
+                    <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain"
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
                     <span class="text-black text-[18px]">Arquivo</span>
+                    <input type="file" id="fileAttachmentInput" class="hidden">
                 </div>
             </footer>
         </div>
@@ -618,8 +559,19 @@
             const createPostFab = document.getElementById('createPostFab');
             const createPostOverlay = document.getElementById('createPostOverlay');
             const closeCreatePostButton = document.getElementById('closeCreatePostButton');
-            const sendPostButton = document.getElementById('sendPostButton');
+            const publishPostButton = document.getElementById('publishPostButton'); // Renomeado para mais clareza
             const postContentInput = document.getElementById('postContentInput');
+
+            // Referências para os botões de anexar mídia
+            const attachImageButton = document.getElementById('attachImageButton');
+            const attachFileButton = document.getElementById('attachFileButton');
+            const imageFileInput = document.getElementById('imageFileInput');
+            const fileAttachmentInput = document.getElementById('fileAttachmentInput');
+            const attachedMediaPreview = document.getElementById('attachedMediaPreview');
+            const previewImage = document.getElementById('previewImage');
+            const previewFileName = document.getElementById('previewFileName');
+            let attachedFileType = null; // 'image' ou 'file'
+            let attachedFileSrc = null; // URL da imagem ou do arquivo
 
             // Referência para o título da timeline
             const timelineTitle = document.getElementById('timelineTitle');
@@ -642,7 +594,7 @@
                 }
             }
 
-           
+            
             // Função para fechar qualquer overlay (stories e criar post)
             function closeAllOverlays() {
                 if (mariaStoryOverlay) mariaStoryOverlay.classList.add('hidden');
@@ -1119,6 +1071,14 @@
                     closeAllOverlays(); // Fecha outros overlays antes de abrir
                     if (createPostOverlay) createPostOverlay.classList.remove('hidden');
                     if (postContentInput) postContentInput.value = ''; // Limpa o input ao abrir
+                    // Reseta a pré-visualização de mídia
+                    attachedMediaPreview.classList.add('hidden');
+                    previewImage.classList.add('hidden');
+                    previewImage.src = '';
+                    previewFileName.classList.add('hidden');
+                    previewFileName.textContent = '';
+                    attachedFileType = null;
+                    attachedFileSrc = null;
                 });
             }
 
@@ -1128,15 +1088,129 @@
                 });
             }
 
-            if (sendPostButton) {
-                sendPostButton.addEventListener('click', function() {
-                    if (postContentInput && postContentInput.value.trim() !== '') {
-                        console.log("Novo Post: " + postContentInput.value);
-                        // Aqui você enviaria o post para um backend, amada!
-                    }
-                    if (createPostOverlay) createPostOverlay.classList.add('hidden'); // Fecha a tela após enviar
+            // --- Lógica para abrir explorador de arquivos ao clicar nos ícones de mídia ---
+            if (attachImageButton) {
+                attachImageButton.addEventListener('click', function() {
+                    imageFileInput.click(); // Simula o clique no input de arquivo de imagem
                 });
             }
+
+            if (imageFileInput) {
+                imageFileInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImage.src = e.target.result;
+                            previewImage.classList.remove('hidden');
+                            previewFileName.classList.add('hidden'); // Esconde o nome do arquivo se for imagem
+                            attachedMediaPreview.classList.remove('hidden');
+                            attachedFileType = 'image';
+                            attachedFileSrc = e.target.result; // Guarda a URL da imagem para o post
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        previewImage.classList.add('hidden');
+                        previewImage.src = '';
+                        attachedMediaPreview.classList.add('hidden');
+                        attachedFileType = null;
+                        attachedFileSrc = null;
+                    }
+                });
+            }
+
+            if (attachFileButton) {
+                attachFileButton.addEventListener('click', function() {
+                    fileAttachmentInput.click(); // Simula o clique no input de arquivo genérico
+                });
+            }
+
+            if (fileAttachmentInput) {
+                fileAttachmentInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        previewFileName.textContent = `Arquivo: ${file.name}`;
+                        previewFileName.classList.remove('hidden');
+                        previewImage.classList.add('hidden'); // Esconde a imagem se for arquivo
+                        previewImage.src = '';
+                        attachedMediaPreview.classList.remove('hidden');
+                        attachedFileType = 'file';
+                        attachedFileSrc = URL.createObjectURL(file); // Guarda a URL do arquivo para o post
+                    } else {
+                        previewFileName.classList.add('hidden');
+                        previewFileName.textContent = '';
+                        attachedMediaPreview.classList.add('hidden');
+                        attachedFileType = null;
+                        attachedFileSrc = null;
+                    }
+                });
+            }
+
+
+            // --- Publicar Novo Post no Feed ---
+            if (publishPostButton) {
+                publishPostButton.addEventListener('click', function() {
+                    const postContent = postContentInput.value.trim();
+
+                    if (postContent === '' && !attachedFileType) {
+                        alert('Bicha, escreva algo ou anexe uma mídia para publicar um post!');
+                        return;
+                    }
+
+                    // Pega o contêiner principal da main onde os posts estão
+                    const mainContainer = document.getElementById('main'); 
+                    
+                    // Cria um novo elemento de tweet, diva!
+                    const newTweetCard = document.createElement('div');
+                    newTweetCard.classList.add('tweet-card', 'w-[383px]', 'border-b-2', 'border-black', 'flex', 'flex-col', 'justify-between', 'pt-2', 'pb-2', 'mx-auto', 'relative');
+                    // Você pode adicionar um data-campus ou data-type se quiser que ele seja filtrável
+                    newTweetCard.dataset.type = 'tweet';
+                    newTweetCard.dataset.campus = 'novo'; // Exemplo de campus para posts novos
+
+                    newTweetCard.innerHTML = `
+                        <div class="flex items-center px-2">
+                            <img src="https://placehold.co/44x44/d9d9d9/000000?text=EU" alt="Sua Foto de Perfil" class="w-[44px] h-[44px] rounded-full object-cover mr-2">
+                            <span class="font-bold text-[14px] text-gray-800">Você - UNIRIO - [Seu Curso Aqui]</span>
+                        </div>
+                        <p class="text-[14px] text-justify text-gray-700 px-2 mt-1 mb-1 leading-tight">
+                            ${postContent}
+                        </p>
+                        ${attachedFileType === 'image' ? `<img src="${attachedFileSrc}" alt="Imagem Anexada" class="w-[370px] max-h-[200px] object-contain rounded-lg mx-auto my-2 border border-gray-300">` : ''}
+                        ${attachedFileType === 'file' ? `
+                            <div class="w-[370px] h-[52px] bg-gray-200 rounded-lg flex items-center px-2 mx-auto my-2 relative">
+                                <img src="img/clip.png" alt="Ícone de Arquivo" class="w-[40px] h-[40px] rounded object-contain mr-2">
+                                <div class="flex flex-col justify-center flex-grow">
+                                    <span class="font-bold text-[13px] text-gray-800">Arquivo Anexado:</span>
+                                    <span class="text-[13px] text-gray-800 mt-0.5 truncate">${previewFileName.textContent.replace('Arquivo: ', '')}</span>
+                                </div>
+                            </div>
+                        ` : ''}
+                        <div class="flex justify-between items-center px-2">
+                            <img src="img/adicionar.png" alt="Ícone de Adicionar" class="w-[20px] h-[20px] object-contain cursor-pointer"
+                                onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
+                            <div class="flex items-center">
+                                <img src="img/like.png" alt="Ícone de Curtir" class="w-[20px] h-[20px] object-contain mr-1"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+                                <span class="font-bold text-[11px] text-gray-800">0</span>
+                            </div>
+                        </div>
+                    `;
+                    // Adiciona o novo post no topo do feed, logo abaixo da barra de stories
+                    mainContainer.insertBefore(newTweetCard, mainContainer.children[2]); 
+                    
+                    // Limpa o input e fecha a tela de criar post
+                    postContentInput.value = '';
+                    attachedMediaPreview.classList.add('hidden');
+                    previewImage.classList.add('hidden');
+                    previewImage.src = '';
+                    previewFileName.classList.add('hidden');
+                    previewFileName.textContent = '';
+                    attachedFileType = null;
+                    attachedFileSrc = null;
+                    if (createPostOverlay) createPostOverlay.classList.add('hidden');
+                });
+            }
+
         }); // Fim do DOMContentLoaded
     </script>
 </body>

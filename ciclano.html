@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ciclano - Unilink Chat</title>
-    <!-- Inclui o Tailwind CSS para estilização chique, bicha! -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -110,10 +109,19 @@
             padding: 10px;
         }
 
-        .call-image {
+        .call-video-area video { /* Estilo para o elemento de vídeo real */
+            width: 100%;
+            height: 50%; /* Metade da área de vídeo */
+            object-fit: cover; /* Garante que o vídeo preencha o espaço sem distorcer */
+            border-radius: 8px; /* Bordas arredondadas para o vídeo */
+            background-color: #333; /* Fundo escuro se a câmera não carregar */
+        }
+
+        .call-image { /* Mantive para o Ciclano, que é uma imagem estática */
             width: 100%;
             height: 50%; /* Metade da área de vídeo */
             object-fit: cover;
+            border-radius: 8px; /* Bordas arredondadas */
         }
 
         .call-controls {
@@ -139,35 +147,27 @@
     </style>
 </head>
 <body>
-    <!-- O contêiner principal, com todo o charme do nosso retângulo e borda! -->
     <div class="w-[393px] h-[852px] border-4 border-black rounded-3xl
-                flex flex-col bg-white shadow-xl overflow-hidden relative">
+                 flex flex-col bg-white shadow-xl overflow-hidden relative">
         
-        <!-- O cabeçalho da página de chat -->
         <header class="w-full h-[70px] bg-[#e5a1ae] flex items-center  px-4 shadow-md z-10">
-            <!-- Seta para voltar para a página de DMs -->
             <a href="dm1.html" class="text-white text-2xl mr-[10px] font-bold">
-                &larr; <!-- Seta para a esquerda -->
-            </a>
+                &larr; </a>
             
-            <!-- Informações do contato no centro -->
             <div class="flex items-center flex-grow ">
                 <img src="img/ciclano.png" alt="Foto de Perfil do Ciclano" class="w-[42px] h-[42px] rounded-full object-cover mr-2"
-                     onerror="this.onerror=null;this.src='https://placehold.co/42x42/cccccc/000000?text=C';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/42x42/cccccc/000000?text=C';">
                 <div class="flex flex-col items-start">
                     <span class="font-bold text-[11px] text-white">Ciclano - CCH - Biblioteconomia</span>
                     <span class="text-[10px] text-white opacity-80">online</span>
                 </div>
             </div>
             
-            <!-- Ícone de vídeo chamada (agora com ID para interação) -->
             <img id="videoCallIcon" src="img/chamada.png" alt="Ícone de Vídeo Chamada" class="w-[24px] h-[24px] object-contain cursor-pointer"
-                 onerror="this.onerror=null;this.src='https://placehold.co/24x24/aaaaaa/FFFFFF?text=V';">
+                onerror="this.onerror=null;this.src='https://placehold.co/24x24/aaaaaa/FFFFFF?text=V';">
         </header>
 
-        <!-- Conteúdo principal do chat - mensagens -->
         <main id="chatMessages" class="flex-grow overflow-y-auto overflow-x-hidden p-4 relative z-0 flex flex-col">
-            <!-- Mensagens -->
             <div class="message-bubble message-sent">
                 <span>oii</span>
                 <span class="timestamp">12:21 <img src="https://placehold.co/12x12/4f603e/FFFFFF?text=%E2%9C%93" class="checkmark-icon" alt="Checkmark"></span>
@@ -214,11 +214,10 @@
             </div>
         </main>
 
-        <!-- Área de input de mensagem -->
         <div class="w-full p-4 bg-white border-t border-gray-200 flex items-center">
             <input type="text" id="messageInput" placeholder="Volta pra mim Ciclanooooo!"
-                   class="flex-grow h-[35.5px] rounded-[18px] border-2 border-gray-300 px-4 py-2
-                          focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-sm">
+                    class="flex-grow h-[35.5px] rounded-[18px] border-2 border-gray-300 px-4 py-2
+                            focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 text-sm">
             <button id="sendMessageButton" class="w-[54px] h-[35.5px] bg-[#e5a1ae] rounded-[18px] border-2 border-black flex items-center justify-center ml-2">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -226,74 +225,65 @@
             </button>
         </div>
 
-        <!-- Rodapé DIVO! Fixo na parte inferior do contêiner principal -->
         <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between  z-10">
-            <!-- Ícone Home -->
             <a href="home1.html" class="w-[78.6px] h-[60px] bg-[#657d4d] flex items-center justify-around">
                 <img src="img/home.png" alt="Ícone Home" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
             </a>
             
-            <!-- Ícone Pesquisar -->
             <a href="usuarios.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/pesquisar.png" alt="Ícone Pesquisar" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=P';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=P';">
             </a>
 
-            <!-- Ícone Jogaprolo -->
             <a href="jogaprolo.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/jogaprolo.png" alt="Ícone Jogaprolo" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
             </a>
 
-            <!-- Ícone Agenda -->
             <a href="agenda.html" class="w-[78.6px] h-[60px]  flex items-center justify-around">
                 <img src="img/agenda.png" alt="Ícone Agenda" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
             </a>
 
-            <!-- Ícone Seu Perfil -->
             <a href="seuperfil.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/seuperfil.png" alt="Ícone Seu Perfil" class="w-[36px] h-[36px] object-contain"
-                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=S';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=S';">
             </a>
         </footer>
-    
+        
     </div>
 
-    <!-- Overlay da Chamada de Vídeo (Inicialmente escondido) -->
     <div id="videoCallOverlay" class="call-overlay hidden">
         <div class="call-content">
-            <!-- Cabeçalho da Chamada -->
             <div class="call-header">
                 Ciclano - CCH - Biblioteconomia
             </div>
-            <!-- Área de Vídeo - Imagens dos participantes -->
             <div class="call-video-area">
                 <img src="img/ciclanochamada.png" alt="Ciclano em Chamada" class="call-image"
-                     onerror="this.onerror=null;this.src='https://placehold.co/393x400/ADD8E6/000000?text=CICLANO';">
-                <img src="img/mariachamada.png" alt="Você em Chamada" class="call-image"
-                     onerror="this.onerror=null;this.src='https://placehold.co/393x400/FFDAB9/000000?text=VOCE';">
+                    onerror="this.onerror=null;this.src='https://placehold.co/393x400/ADD8E6/000000?text=CICLANO';">
+                <video id="localVideo" autoplay playsinline muted class="call-video"></video>
             </div>
-            <!-- Controles da Chamada -->
             <div class="call-controls">
-                <button class="control-button">
-                    <img src="img/microfone.png" alt="Microfone"
-                         onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=MIC';">
+                <button id="toggleMicrophone" class="control-button">
+                    <img src="img/microfone.png" alt="Microfone" id="micIcon"
+                        onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=MIC';">
                 </button>
-                <button class="control-button">
-                    <img src="img/chamada.png" alt="Câmera"
-                         onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=CAM';">
+                <button id="toggleCamera" class="control-button">
+                    <img src="img/chamada.png" alt="Câmera" id="cameraIcon"
+                        onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=CAM';">
                 </button>
                 <button id="endCallButton" class="control-button">
                     <img src="img/desligarchamada.png" alt="Desligar Chamada"
-                         onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=END';">
+                        onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=END';">
                 </button>
             </div>
         </div>
     </div>
 
     <script>
+        let localStream; // Variável para armazenar o stream de vídeo/áudio da webcam
+
         document.addEventListener('DOMContentLoaded', () => {
             const messageInput = document.getElementById('messageInput');
             const sendMessageButton = document.getElementById('sendMessageButton');
@@ -301,7 +291,13 @@
             const videoCallIcon = document.getElementById('videoCallIcon');
             const videoCallOverlay = document.getElementById('videoCallOverlay');
             const endCallButton = document.getElementById('endCallButton');
+            const localVideo = document.getElementById('localVideo'); // Elemento <video> para a webcam
+            const toggleMicrophoneButton = document.getElementById('toggleMicrophone');
+            const toggleCameraButton = document.getElementById('toggleCamera');
+            const micIcon = document.getElementById('micIcon');
+            const cameraIcon = document.getElementById('cameraIcon');
 
+            // Função para enviar mensagens no chat
             function sendMessage() {
                 const messageText = messageInput.value.trim();
                 if (messageText === '') {
@@ -360,20 +356,66 @@
                 });
             }
 
-            // Lógica para abrir a overlay da chamada de vídeo
+            // --- Lógica da Chamada de Vídeo ---
+
+            // Função para iniciar a chamada de vídeo e pedir acesso à webcam
+            async function startVideoCall() {
+                try {
+                    // Pede acesso à câmera e microfone
+                    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    localVideo.srcObject = localStream; // Conecta o stream ao elemento <video>
+                    videoCallOverlay.classList.remove('hidden'); // Mostra a overlay da chamada
+                    // Garante que os ícones de mic e câmera comecem "ativos"
+                    micIcon.src = 'img/microfone.png';
+                    cameraIcon.src = 'img/chamada.png';
+                } catch (error) {
+                    console.error('Erro ao acessar a câmera/microfone:', error);
+                    alert('Amada, não consegui acessar sua câmera ou microfone! Tem certeza que deu permissão?');
+                }
+            }
+
+            // Função para parar o stream da webcam
+            function stopVideoCall() {
+                if (localStream) {
+                    localStream.getTracks().forEach(track => track.stop()); // Para todas as trilhas (vídeo e áudio)
+                    localStream = null;
+                    localVideo.srcObject = null;
+                }
+                videoCallOverlay.classList.add('hidden'); // Esconde a overlay
+            }
+
+            // Evento de clique para o ícone de vídeo chamada
             if (videoCallIcon) {
-                videoCallIcon.addEventListener('click', () => {
-                    if (videoCallOverlay) {
-                        videoCallOverlay.classList.remove('hidden');
+                videoCallIcon.addEventListener('click', startVideoCall);
+            }
+
+            // Evento de clique para o botão de desligar chamada
+            if (endCallButton) {
+                endCallButton.addEventListener('click', stopVideoCall);
+            }
+
+            // Lógica para ligar/desligar microfone
+            if (toggleMicrophoneButton) {
+                toggleMicrophoneButton.addEventListener('click', () => {
+                    if (localStream) {
+                        const audioTrack = localStream.getAudioTracks()[0];
+                        if (audioTrack) {
+                            audioTrack.enabled = !audioTrack.enabled; // Alterna o estado do microfone
+                            micIcon.src = audioTrack.enabled ? 'img/microfone.png' : 'img/microfone2.png';
+                        }
                     }
                 });
             }
 
-            // Lógica para fechar a overlay da chamada de vídeo
-            if (endCallButton) {
-                endCallButton.addEventListener('click', () => {
-                    if (videoCallOverlay) {
-                        videoCallOverlay.classList.add('hidden');
+            // Lógica para ligar/desligar câmera
+            if (toggleCameraButton) {
+                toggleCameraButton.addEventListener('click', () => {
+                    if (localStream) {
+                        const videoTrack = localStream.getVideoTracks()[0];
+                        if (videoTrack) {
+                            videoTrack.enabled = !videoTrack.enabled; // Alterna o estado da câmera
+                            cameraIcon.src = videoTrack.enabled ? 'img/chamada.png' : 'img/camera2.png';
+                        }
                     }
                 });
             }

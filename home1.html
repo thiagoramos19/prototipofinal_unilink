@@ -227,6 +227,7 @@
                         onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=C';">
                     <span class="font-bold text-[14px] text-gray-800">Ciclano - CCH - Biblioteconomia</span>
                 </div>
+                
                 <div class="w-[370px] mx-auto my-2 relative">
                     <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/5p48T2Tqm7xX3ym7uslGOg?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                 </div>
@@ -354,7 +355,7 @@
             +
         </button>
 
-        <button id="takePhotoFab" class="absolute bottom-[140px] right-[20px] w-[50px] h-[50px] rounded-full bg-green-500 border-[2px] border-black flex items-center justify-center shadow-lg z-40">
+        <button id="takePhotoFab" class="absolute bottom-[140px] right-[20px] w-[50px] h-[50px] rounded-full bg-green-500 border-[2px] border-black flex items-center justify-center shadow-lg z-40 hidden">
             <img src="img/foto.png" alt="Ícone de Câmera" class="w-[30px] h-[30px] object-contain"
                 onerror="this.onerror=null;this.src='https://placehold.co/30x30/cccccc/FFFFFF?text=CAM';">
         </button>
@@ -530,28 +531,34 @@
                 </div>
             </main>
 
-            <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between top-2 px-1 z-10">
-                <div class="flex flex-col items-center cursor-pointer" id="attachImageButton">
-                    <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
-                    <span class="text-black text-[18px]">Imagem</span>
-                    <input type="file" id="imageFileInput" accept="image/*" class="hidden">
-                </div>
-                <div class="flex flex-col items-center cursor-pointer" id="attachBookButton">
-                    <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
-                    <span class="text-black text-[18px]">Livro</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer" id="attachMusicButton">
-                    <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
-                    <span class="text-black text-[18px]">Música</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer" id="attachFileButton">
-                    <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
-                    <span class="text-black text-[18px]">Arquivo</span>
-                    <input type="file" id="fileAttachmentInput" class="hidden">
+            <footer class="w-full h-[120px] bg-[#4f603e] flex flex-col items-center justify-between top-2 px-1 z-10">
+                <button id="takePhotoInPostOverlayButton" class="w-[50px] h-[50px] rounded-full bg-green-500 border-[2px] border-black flex items-center justify-center shadow-lg mt-2">
+                    <img src="img/foto.png" alt="Tirar Foto" class="w-[30px] h-[30px] object-contain"
+                        onerror="this.onerror=null;this.src='https://placehold.co/30x30/cccccc/FFFFFF?text=CAM';">
+                </button>
+                <div class="flex items-center justify-around w-full mt-2">
+                    <div class="flex flex-col items-center cursor-pointer" id="attachImageButton">
+                        <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain"
+                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
+                        <span class="text-black text-[18px]">Imagem</span>
+                        <input type="file" id="imageFileInput" accept="image/*" class="hidden">
+                    </div>
+                    <div class="flex flex-col items-center cursor-pointer" id="attachBookButton">
+                        <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain"
+                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
+                        <span class="text-black text-[18px]">Livro</span>
+                    </div>
+                    <div class="flex flex-col items-center cursor-pointer" id="attachMusicButton">
+                        <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain"
+                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
+                        <span class="text-black text-[18px]">Música</span>
+                    </div>
+                    <div class="flex flex-col items-center cursor-pointer" id="attachFileButton">
+                        <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain"
+                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
+                        <span class="text-black text-[18px]">Arquivo</span>
+                        <input type="file" id="fileAttachmentInput" class="hidden">
+                    </div>
                 </div>
             </footer>
         </div>
@@ -615,6 +622,8 @@
             const closeCreatePostButton = document.getElementById('closeCreatePostButton');
             const publishPostButton = document.getElementById('publishPostButton'); 
             const postContentInput = document.getElementById('postContentInput');
+            // NOVO: Botão de Tirar Foto dentro do overlay de criar post
+            const takePhotoInPostOverlayButton = document.getElementById('takePhotoInPostOverlayButton');
 
             // Referências para os botões de anexar mídia
             const attachImageButton = document.getElementById('attachImageButton');
@@ -636,15 +645,14 @@
             const feedbackMessage = document.getElementById('feedbackMessage');
             const feedbackOkButton = document.getElementById('feedbackOkButton');
 
-            // NOVO: Elementos da Câmera para Tirar Foto
-            const takePhotoFab = document.getElementById('takePhotoFab');
+            // Elementos da Câmera para Tirar Foto (AGORA SÓ UM OVERLAY, SEM BOTÃO NO HTML PRINCIPAL)
             const cameraOverlay = document.getElementById('cameraOverlay');
             const cameraVideo = document.getElementById('cameraVideo');
             const capturePhotoButton = document.getElementById('capturePhotoButton');
             const closeCameraButton = document.getElementById('closeCameraButton');
             const captureCanvas = document.getElementById('captureCanvas');
 
-            // NOVO: Elementos do Story da Foto Capturada
+            // Elementos do Story da Foto Capturada
             const capturedPhotoStoryOverlay = document.getElementById('capturedPhotoStoryOverlay');
             const capturedStoryImage = document.getElementById('capturedStoryImage');
             const closeCapturedStoryButton = document.getElementById('closeCapturedStoryButton');
@@ -681,8 +689,8 @@
                 if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
                 if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
                 if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
-                if (cameraOverlay) cameraOverlay.classList.add('hidden'); // NOVO
-                if (capturedPhotoStoryOverlay) capturedPhotoStoryOverlay.classList.add('hidden'); // NOVO
+                if (cameraOverlay) cameraOverlay.classList.add('hidden'); 
+                if (capturedPhotoStoryOverlay) capturedPhotoStoryOverlay.classList.add('hidden'); 
             }
 
             function setupSwipeToClose(overlayElement, touchStartYVarName) { 
@@ -1242,6 +1250,13 @@
                 });
             }
 
+            // NOVO: Lógica do botão de tirar foto dentro do create post overlay
+            if (takePhotoInPostOverlayButton) {
+                takePhotoInPostOverlayButton.addEventListener('click', function() {
+                    closeAllOverlays(); // Fecha o overlay de criar post
+                    startCamera(); // Abre a câmera para tirar foto
+                });
+            }
 
             // --- Publicar Novo Post no Feed ---
             if (publishPostButton) {
@@ -1278,7 +1293,8 @@
                                 </div>
                             </div>
                         ` : ''}
-                        <div class="flex justify-end items-center px-2"> <div class="flex items-center">
+                        <div class="flex justify-end items-center px-2"> 
+                            <div class="flex items-center">
                                 <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
                                     onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
                                 <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">0</span>
@@ -1342,12 +1358,13 @@
                 }
             }
 
-            if (takePhotoFab) {
-                takePhotoFab.addEventListener('click', function() {
-                    closeAllOverlays();
-                    startCamera();
-                });
-            }
+            // O takePhotoFab não existe mais na parte principal do HTML, ele foi movido para o footer do createPostOverlay
+            // if (takePhotoFab) {
+            //     takePhotoFab.addEventListener('click', function() {
+            //         closeAllOverlays();
+            //         startCamera();
+            //     });
+            // }
 
             if (closeCameraButton) {
                 closeCameraButton.addEventListener('click', function() {
@@ -1399,8 +1416,8 @@
             }
 
             // Configura swipe para fechar o overlay da câmera e do story capturado
-            setupSwipeToClose(cameraOverlay, 'cameraTouchStartY'); // Adicione uma variável para touchStartY se for usar swipe na câmera
-            setupSwipeToClose(capturedPhotoStoryOverlay, 'capturedStoryTouchStartY'); // Adicione uma variável para touchStartY se for usar swipe no story capturado
+            setupSwipeToClose(cameraOverlay, 'cameraTouchStartY'); 
+            setupSwipeToClose(capturedPhotoStoryOverlay, 'capturedStoryTouchStartY'); 
 
         }); // Fim do DOMContentLoaded
     </script>

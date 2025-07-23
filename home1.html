@@ -37,7 +37,7 @@
         }
 
         /* Estilo para a sobreposição de qualquer Story (genérico) */
-        .story-overlay, .create-post-overlay, .camera-overlay, .captured-photo-story-overlay {
+        .story-overlay, .create-post-overlay, .camera-overlay, .captured-photo-story-overlay, .create-story-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -62,6 +62,19 @@
              flex-direction: column;
              overflow: hidden; /* Garante que o conteúdo não vaze */
              border: 4px solid black; /* Borda preta como no celular */
+        }
+        .create-story-overlay .content-wrapper {
+            background-color: #f0f0f0; /* Fundo mais claro para criar story */
+            width: 393px; /* Largura da tela do celular */
+            height: 852px; /* Altura da tela do celular */
+            border: 4px solid black; /* Borda preta */
+            border-radius: 16px; /* Cantos arredondados */
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Estilo para o overlay de feedback de adição de amigo */
@@ -112,7 +125,7 @@
             background-color: #f0f0f0;
         }
 
-        .maria-story-video-overlay video, .camera-overlay video {
+        .maria-story-video-overlay video, .camera-overlay video, .create-story-overlay video {
             width: 100%;
             height: 100%;
             object-fit: cover; /* Garante que o vídeo preencha o espaço */
@@ -175,11 +188,6 @@
             </div>
 
             <div id="storiesContainer" class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
-                <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
-                    <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
-                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
-                    >
-                </div>
                 <div id="mariaStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-black flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="img/maria.png" alt="Story de Maria" id="mariaStoryImage" class="w-[53px] h-[53px] rounded-full object-cover"
                         onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
@@ -189,11 +197,17 @@
                     </div>
                 </div>
 
+                <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
+                    <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
+                    >
+                </div>
+                
                 <div class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center">
                     <img src="https://placehold.co/53x53/cccccc/000000?text=A" alt="Story do Amigo A" class="w-[53px] h-[53px] rounded-full object-cover"
                     >
                 </div>
-            </div>
+                </div>
 
             <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="ccet" data-type="tweet">
                 <div class="flex items-center px-2">
@@ -382,6 +396,21 @@
         </div>
     </div>
 
+    <div id="createStoryOverlay" class="create-story-overlay hidden">
+        <div class="content-wrapper">
+            <video id="createStoryVideoPreview" autoplay playsinline muted class="w-full h-full object-cover"></video>
+            <button id="takePhotoForStoryButton" class="absolute bottom-[80px] left-1/2 -translate-x-1/2 w-[60px] h-[60px] rounded-full bg-red-500 border-[2px] border-black flex items-center justify-center shadow-lg">
+                <img src="img/foto.png" alt="Tirar Foto" class="w-[35px] h-[35px] object-contain"
+                    onerror="this.onerror=null;this.src='https://placehold.co/35x35/cccccc/FFFFFF?text=FOTO';">
+            </button>
+            <button id="closeCreateStoryOverlayButton" class="absolute bottom-[20px] left-1/2 -translate-x-1/2 w-[148px] h-[33px] bg-[#002c5c] text-white font-bold text-[14px] rounded-14px flex items-center justify-center">
+                Voltar para home
+            </button>
+        </div>
+        <canvas id="createStoryCanvas" class="hidden"></canvas>
+    </div>
+
+
     <div id="ciclanoStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
             <button id="closeCiclanoStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
@@ -460,72 +489,12 @@
         </div>
     </div>
 
-    <div id="createPostOverlay" class="create-post-overlay hidden ">
-        <div class="content-wrapper">
-            <header class="w-full h-[60px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md z-10">
-                <button id="closeCreatePostButton" class="text-white text-2xl font-bold">
-                    ← </button>
-                <div class="text-white font-bold text-[25px]">unilink</div>
-                <button id="publishPostButton" class="text-white font-bold text-[20px]">
-                    Publicar Post
-                </button>
-            </header>
-
-            <main class="flex-grow p-4 bg-[#FFFFFF] ">
-                <textarea id="postContentInput" placeholder="O que você está fazendo?"
-                               class="w-full h-[150px] rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
-                
-                <div id="attachedMediaPreview" class="mt-4 hidden">
-                    <img id="previewImage" src="" alt="Pré-visualização da imagem" class="max-w-full max-h-48 object-contain rounded-md mx-auto hidden">
-                    <p id="previewFileName" class="text-gray-700 text-center mt-2 hidden"></p>
-                </div>
-            </main>
-
-            <footer class="w-full h-[120px] bg-[#4f603e] flex flex-col items-center justify-between top-2 px-1 z-10">
-                <button id="takePhotoInPostOverlayButton" class="w-[50px] h-[50px] rounded-full bg-green-500 border-[2px] border-black flex items-center justify-center shadow-lg mt-2">
-                    <img src="img/foto.png" alt="Tirar Foto" class="w-[30px] h-[30px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/30x30/cccccc/FFFFFF?text=CAM';">
-                </button>
-                <div class="flex items-center justify-around w-full mt-2">
-                    <div class="flex flex-col items-center cursor-pointer" id="attachImageButton">
-                        <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain"
-                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
-                        <span class="text-black text-[18px]">Imagem</span>
-                        <input type="file" id="imageFileInput" accept="image/*" class="hidden">
-                    </div>
-                    <div class="flex flex-col items-center cursor-pointer" id="attachBookButton">
-                        <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain"
-                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
-                        <span class="text-black text-[18px]">Livro</span>
-                    </div>
-                    <div class="flex flex-col items-center cursor-pointer" id="attachMusicButton">
-                        <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain"
-                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
-                        <span class="text-black text-[18px]">Música</span>
-                    </div>
-                    <div class="flex flex-col items-center cursor-pointer" id="attachFileButton">
-                        <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain"
-                            onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
-                        <span class="text-black text-[18px]">Arquivo</span>
-                        <input type="file" id="fileAttachmentInput" class="hidden">
-                    </div>
-                </div>
-            </footer>
-        </div>
-    </div>
-
-    <div id="friendFeedbackOverlay" class="feedback-overlay hidden">
-        <div class="feedback-box">
-            <p id="feedbackMessage" class="text-lg font-semibold mb-4"></p>
-            <button id="feedbackOkButton" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Ok!</button>
-        </div>
-    </div>
-
 
     <script>
         let mariaStoryLocalStream; // Variável para o stream da webcam do story da Maria
         let cameraLocalStream; // Variável para o stream da webcam da câmera de foto
         let capturedPhotoDataUrl = null; // Para armazenar a foto tirada
+        let createStoryLocalStream; // Variável para o stream da câmera na tela de criar story
 
         document.addEventListener('DOMContentLoaded', (event) => {
             const filterButton = document.getElementById('filterButton');
@@ -548,9 +517,8 @@
             let currentCiclanoStoryIndex = 0;
             let ciclanoTouchStartY = 0;
             const closeCiclanoStoryButtonTop = document.getElementById('closeCiclanoStoryButtonTop'); 
-            // O spotifyRedirectButton não é mais necessário.
 
-            // Referências para os stories do Amigo A e B 
+            // Referências para os stories do Amigo A e B (Amigo B foi removido do HTML)
             const amigoAStoryCircle = document.getElementById('amigoAStoryCircle');
             const amigoAStoryOverlay = document.getElementById('amigoAStoryOverlay');
             const amigoAStories = ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+2'];
@@ -558,15 +526,12 @@
             let amigoATouchStartY = 0;
             const closeAmigoAStoryButtonTop = document.getElementById('closeAmigoAStoryButtonTop'); 
 
-
             // Referências para a tela de Criar Post
             const createPostFab = document.getElementById('createPostFab');
             const createPostOverlay = document.getElementById('createPostOverlay');
             const closeCreatePostButton = document.getElementById('closeCreatePostButton');
             const publishPostButton = document.getElementById('publishPostButton'); 
             const postContentInput = document.getElementById('postContentInput');
-            // NOVO: Botão de Tirar Foto dentro do overlay de criar post
-            const takePhotoInPostOverlayButton = document.getElementById('takePhotoInPostOverlayButton');
 
             // Referências para os botões de anexar mídia
             const attachImageButton = document.getElementById('attachImageButton');
@@ -602,6 +567,14 @@
             const storiesContainer = document.getElementById('storiesContainer');
             let newStoryCounter = 0; // Para gerar IDs únicos para novos stories
 
+            // NOVO: Elementos da tela de Criar Story
+            const createStoryOverlay = document.getElementById('createStoryOverlay');
+            const createStoryVideoPreview = document.getElementById('createStoryVideoPreview');
+            const takePhotoForStoryButton = document.getElementById('takePhotoForStoryButton');
+            const closeCreateStoryOverlayButton = document.getElementById('closeCreateStoryOverlayButton');
+            const createStoryCanvas = document.getElementById('createStoryCanvas'); // Canvas para capturar a foto do story
+
+
             // --- Funções Comuns ---
 
             function toggleFilterMenu() { 
@@ -616,6 +589,7 @@
                 }
             }
 
+            // AQUI: A função closeAllOverlays foi atualizada para parar o stream da câmera de criar story
             function closeAllOverlays() {
                 if (mariaStoryOverlay && !mariaStoryOverlay.classList.contains('hidden')) { 
                     stopMariaStoryCamera(); 
@@ -623,15 +597,22 @@
                 if (cameraOverlay && !cameraOverlay.classList.contains('hidden')) {
                     stopCamera();
                 }
+                if (createStoryOverlay && !createStoryOverlay.classList.contains('hidden')) { // NOVO
+                    stopCreateStoryCamera(); // NOVO
+                }
+
                 if (mariaStoryOverlay) mariaStoryOverlay.classList.add('hidden');
                 if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.add('hidden');
                 if (amigoAStoryOverlay) amigoAStoryOverlay.classList.add('hidden');
+                // if (amigoBStoryOverlay) amigoBStoryOverlay.classList.add('hidden'); // REMOVIDO DO HTML
                 if (createPostOverlay) createPostOverlay.classList.add('hidden');
                 if (friendFeedbackOverlay) friendFeedbackOverlay.style.display = 'none';
                 if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
                 if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
+                // if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden'); // REMOVIDO DO HTML
                 if (cameraOverlay) cameraOverlay.classList.add('hidden'); 
                 if (capturedPhotoStoryOverlay) capturedPhotoStoryOverlay.classList.add('hidden'); 
+                if (createStoryOverlay) createStoryOverlay.classList.add('hidden'); // NOVO
             }
 
             function setupSwipeToClose(overlayElement, touchStartYVarName) { 
@@ -835,10 +816,14 @@
                     mariaStoryVideo.srcObject = mariaStoryLocalStream;
                     mariaStoryOverlay.classList.remove('hidden');
                     mariaStoryVideo.classList.remove('hidden');
-                } catch (error) {
+                }
+                // AQUI: Erro ao acessar a câmera no story da Maria
+                catch (error) {
                     console.error('Erro ao acessar a câmera para o story da Maria:', error);
                     alert('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
                     mariaStoryVideo.classList.add('hidden');
+                    // Se não conseguir a câmera, talvez exibir uma imagem de fallback ou mensagem na overlay.
+                    // Por agora, apenas escondo o vídeo e mostro a overlay vazia se a câmera falhar.
                     mariaStoryOverlay.classList.remove('hidden'); 
                 }
             }
@@ -863,7 +848,9 @@
                 mariaAddButton.addEventListener('click', function(event) {
                     event.stopPropagation();
                     closeAllOverlays();
-                    startMariaStoryCamera();
+                    
+                    // AQUI: Ao clicar no + do story da Maria, abre a tela de criar story com a câmera
+                    startCreateStoryCamera(); // Chama a função para ativar a câmera na tela de criar story
                 });
             }
 
@@ -1092,13 +1079,13 @@
                 });
             }
 
-            // NOVO: Lógica do botão de tirar foto dentro do create post overlay
-            if (takePhotoInPostOverlayButton) {
-                takePhotoInPostOverlayButton.addEventListener('click', function() {
-                    closeAllOverlays(); // Fecha o overlay de criar post
-                    startCamera(); // Abre a câmera para tirar foto
-                });
-            }
+            // NOVO: Lógica do botão de tirar foto dentro do create post overlay (agora não mais aqui)
+            // if (takePhotoInPostOverlayButton) {
+            //     takePhotoInPostOverlayButton.addEventListener('click', function() {
+            //         closeAllOverlays(); 
+            //         startCamera(); 
+            //     });
+            // }
 
             // --- Publicar Novo Post no Feed ---
             if (publishPostButton) {
@@ -1178,67 +1165,75 @@
                 });
             }
 
-            // --- NOVO: Lógica de Tirar Foto e Criar Story ---
+            // --- NOVO: Lógica da Câmera para TIRAR FOTO para Story (tela de "criar story") ---
 
-            async function startCamera() {
+            async function startCreateStoryCamera() {
                 try {
-                    cameraLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                    cameraVideo.srcObject = cameraLocalStream;
-                    cameraOverlay.classList.remove('hidden');
+                    createStoryLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    createStoryVideoPreview.srcObject = createStoryLocalStream;
+                    createStoryOverlay.classList.remove('hidden');
+                    createStoryVideoPreview.classList.remove('hidden');
                 } catch (error) {
-                    console.error('Erro ao acessar a câmera:', error);
-                    alert('Amada, não consegui acessar sua câmera! Tem certeza que deu permissão?');
-                    cameraOverlay.classList.add('hidden');
+                    console.error('Erro ao acessar a câmera para criar story:', error);
+                    alert('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
+                    createStoryOverlay.classList.add('hidden');
                 }
             }
 
-            function stopCamera() {
-                if (cameraLocalStream) {
-                    cameraLocalStream.getTracks().forEach(track => track.stop());
-                    cameraLocalStream = null;
-                    cameraVideo.srcObject = null;
+            function stopCreateStoryCamera() {
+                if (createStoryLocalStream) {
+                    createStoryLocalStream.getTracks().forEach(track => track.stop());
+                    createStoryLocalStream = null;
+                    createStoryVideoPreview.srcObject = null;
                 }
             }
 
-            if (closeCameraButton) {
-                closeCameraButton.addEventListener('click', function() {
-                    closeAllOverlays();
+            // AQUI: Botão de Tirar Foto DENTRO DO OVERLAY CRIAR STORY
+            if (takePhotoForStoryButton) {
+                takePhotoForStoryButton.addEventListener('click', function() {
+                    const context = createStoryCanvas.getContext('2d');
+                    createStoryCanvas.width = createStoryVideoPreview.videoWidth;
+                    createStoryCanvas.height = createStoryVideoPreview.videoHeight;
+                    context.drawImage(createStoryVideoPreview, 0, 0, createStoryCanvas.width, createStoryCanvas.height);
+                    const newStoryPhotoDataUrl = createStoryCanvas.toDataURL('image/png');
+                    
+                    createNewStoryCircle(newStoryPhotoDataUrl); // Cria o novo círculo de story
+                    closeAllOverlays(); // Fecha a tela de criar story
                 });
             }
 
-            if (capturePhotoButton) {
-                capturePhotoButton.addEventListener('click', function() {
-                    const context = captureCanvas.getContext('2d');
-                    captureCanvas.width = cameraVideo.videoWidth;
-                    captureCanvas.height = cameraVideo.videoHeight;
-                    context.drawImage(cameraVideo, 0, 0, captureCanvas.width, captureCanvas.height);
-                    capturedPhotoDataUrl = captureCanvas.toDataURL('image/png');
-                    
-                    createNewStoryCircle(capturedPhotoDataUrl);
+            if (closeCreateStoryOverlayButton) {
+                closeCreateStoryOverlayButton.addEventListener('click', function() {
                     closeAllOverlays();
                 });
             }
 
             function createNewStoryCircle(imageDataUrl) {
                 newStoryCounter++;
-                const newStoryId = `userStory${newStoryCounter}`;
+                const newStoryId = `userNewStory${newStoryCounter}`; // ID único para o novo story
 
                 const newStoryDiv = document.createElement('div');
                 newStoryDiv.id = newStoryId;
                 newStoryDiv.classList.add('relative', 'w-[63px]', 'h-[63px]', 'rounded-full', 'border-[3px]', 'border-[#e5a1ae]', 'flex-shrink-0', 'flex', 'items-center', 'justify-center', 'cursor-pointer');
                 
                 newStoryDiv.innerHTML = `
-                    <img src="img/maria.png" alt="Seu Story" class="w-[53px] h-[53px] rounded-full object-cover"
+                    <img src="img/maria.png" alt="Seu Novo Story" class="w-[53px] h-[53px] rounded-full object-cover"
                         onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
                     >
                 `;
                 
-                // Adiciona o novo story no início da lista de stories
-                storiesContainer.insertBefore(newStoryDiv, storiesContainer.children[1]); // Inserir depois do Ciclano
+                // AQUI: Adiciona o novo story **depois** do story do Ciclano
+                const ciclanoStoryElement = document.getElementById('ciclanoStoryCircle');
+                if (ciclanoStoryElement && ciclanoStoryElement.nextElementSibling) {
+                    storiesContainer.insertBefore(newStoryDiv, ciclanoStoryElement.nextElementSibling);
+                } else {
+                    // Fallback se Ciclano não for encontrado ou for o último
+                    storiesContainer.appendChild(newStoryDiv);
+                }
 
                 newStoryDiv.addEventListener('click', function() {
                     closeAllOverlays();
-                    capturedStoryImage.src = imageDataUrl;
+                    capturedStoryImage.src = imageDataUrl; // Exibe a foto tirada
                     capturedPhotoStoryOverlay.classList.remove('hidden');
                 });
             }
@@ -1252,6 +1247,7 @@
             // Configura swipe para fechar o overlay da câmera e do story capturado
             setupSwipeToClose(cameraOverlay, 'cameraTouchStartY'); 
             setupSwipeToClose(capturedPhotoStoryOverlay, 'capturedStoryTouchStartY'); 
+            setupSwipeToClose(createStoryOverlay, 'createStoryTouchStartY'); // NOVO: Para o overlay de criar story
 
         }); // Fim do DOMContentLoaded
     </script>

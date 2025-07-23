@@ -162,7 +162,7 @@
             </div>
         </header>
 
-        <main class="flex-grow overflow-y-auto overflow-x-hidden  relative z-0" id="main">
+        <main class="flex-grow overflow-y-auto overflow-x-hidden relative z-0" id="main">
             <div class="w-[179px] h-[29px] bg-[#ff6479] rounded-14px flex items-center justify-between px-2 relative mx-auto mt-4 mb-4">
                 <span id="timelineTitle" class="text-black font-bold text-[18px] text-left flex-grow flex-shrink-0 truncate">Timeline</span>
                 
@@ -323,7 +323,7 @@
             </div>
         </div>
 
-        <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between  z-10">
+        <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between z-10">
             <a href="home1.html" class="w-[78.6px] h-[60px] bg-[#657d4d] flex items-center justify-around">
                 <img src="img/home.png" alt="Ícone Home" class="w-[36px] h-[36px] object-contain"
                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
@@ -339,7 +339,7 @@
                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
             </a>
 
-            <a href="agenda.html" class="w-[78.6px] h-[60px]  flex items-center justify-around">
+            <a href="agenda.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
                 <img src="img/agenda.png" alt="Ícone Agenda" class="w-[36px] h-[36px] object-contain"
                     onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
             </a>
@@ -495,7 +495,7 @@
 
             <main class="flex-grow p-4 bg-[#FFFFFF] ">
                 <textarea id="postContentInput" placeholder="O que você está fazendo?"
-                               class="w-full h-[150px] rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
+                                 class="w-full h-[150px] rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
                 
                 <div id="attachedMediaPreview" class="mt-4 hidden">
                     <img id="previewImage" src="" alt="Pré-visualização da imagem" class="max-w-full max-h-48 object-contain rounded-md mx-auto hidden">
@@ -609,7 +609,10 @@
 
             // --- Funções Comuns (ajustadas para parar a câmera da Maria) ---
 
-            function toggleFilterMenu() { /* ... inalterado ... */ }
+            function toggleFilterMenu() { 
+                filterMenu.classList.toggle('hidden');
+                overlay.style.display = filterMenu.classList.contains('hidden') ? 'none' : 'block';
+            }
             
             function closeAllOverlays() {
                 if (mariaStoryOverlay && !mariaStoryOverlay.classList.contains('hidden')) { // Verifica se o story da Maria está visível
@@ -626,20 +629,137 @@
                 if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
             }
 
-            function setupSwipeToClose(overlayElement, touchStartYVarName) { /* ... inalterado ... */ }
+            function setupSwipeToClose(overlayElement, touchStartYVarName) {
+                overlayElement.addEventListener('touchstart', (e) => {
+                    window[touchStartYVarName] = e.touches[0].clientY;
+                });
+
+                overlayElement.addEventListener('touchmove', (e) => {
+                    const touchMoveY = e.touches[0].clientY;
+                    const diffY = touchMoveY - window[touchStartYVarName];
+                    if (diffY > 50) { // Se arrastar para baixo mais de 50px
+                        closeAllOverlays();
+                    }
+                });
+            }
 
             // --- Lógica do Filtro (inalterada) ---
-            // ... (filterButton, overlay, document click, applyFilters) ...
+            if (filterButton) {
+                filterButton.addEventListener('click', toggleFilterMenu);
+            }
+
+            if (overlay) {
+                overlay.addEventListener('click', () => {
+                    if (!filterMenu.classList.contains('hidden')) {
+                        toggleFilterMenu();
+                    }
+                });
+            }
+
+            const campusSelect = document.getElementById('campusSelect');
+            const jobFilterSwitch = document.getElementById('jobFilterSwitch');
+
+            function applyFilters() {
+                const selectedCampus = campusSelect.value;
+                const showOnlyJobs = jobFilterSwitch.checked;
+                const tweetCards = document.querySelectorAll('.tweet-card');
+
+                tweetCards.forEach(card => {
+                    const cardCampus = card.dataset.campus;
+                    const cardType = card.dataset.type;
+
+                    let isVisible = true;
+
+                    if (showOnlyJobs && cardType !== 'job-opening') {
+                        isVisible = false;
+                    }
+
+                    if (selectedCampus !== 'todos' && cardCampus !== selectedCampus) {
+                        isVisible = false;
+                    }
+
+                    if (isVisible) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Atualiza o título da timeline baseado nos filtros
+                if (showOnlyJobs) {
+                    timelineTitle.textContent = "Vagas de Emprego";
+                    mainHeader.style.backgroundColor = '#ff7a28'; // Cor laranja para vagas
+                } else if (selectedCampus !== 'todos') {
+                    timelineTitle.textContent = `Timeline - ${selectedCampus.toUpperCase()}`;
+                    mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
+                } else {
+                    timelineTitle.textContent = "Timeline";
+                    mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
+                }
+            }
+
+            if (campusSelect) {
+                campusSelect.addEventListener('change', applyFilters);
+            }
+            if (jobFilterSwitch) {
+                jobFilterSwitch.addEventListener('change', applyFilters);
+            }
 
             // --- Lógica das Estrelas de Avaliação (inalterada) ---
-            // ... (starRatings) ...
+            const starRatings = document.querySelectorAll('.star-rating');
+            starRatings.forEach(ratingContainer => {
+                const stars = ratingContainer.querySelectorAll('img');
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.dataset.value);
+                        ratingContainer.dataset.rating = value;
+
+                        stars.forEach((s, i) => {
+                            if (i < value) {
+                                s.src = 'img/estrelapreenchida.png';
+                            } else {
+                                s.src = 'img/estrelaapagada.png';
+                            }
+                        });
+                        console.log(`Avaliação: ${value} estrelas`);
+                    });
+                });
+            });
 
             // --- Lógica dos botões de Curtir (inalterada) ---
-            // ... (like-icon) ...
+            document.querySelectorAll('.like-icon').forEach(button => {
+                button.addEventListener('click', function() {
+                    const likeCountSpan = this.nextElementSibling;
+                    let currentLikes = parseInt(likeCountSpan.textContent);
+                    const hasLiked = likeCountSpan.dataset.liked === 'true';
+
+                    if (hasLiked) {
+                        this.src = 'img/like.png';
+                        currentLikes--;
+                        likeCountSpan.dataset.liked = 'false';
+                    } else {
+                        this.src = 'img/like2.png';
+                        currentLikes++;
+                        likeCountSpan.dataset.liked = 'true';
+                    }
+                    likeCountSpan.textContent = currentLikes;
+                });
+            });
 
             // --- Lógica do Botão de Adicionar Amigo (inalterada) ---
-            // ... (add-friend-icon, feedbackOkButton) ...
+            document.querySelectorAll('.add-friend-icon').forEach(button => {
+                button.addEventListener('click', function() {
+                    const username = this.dataset.username;
+                    feedbackMessage.textContent = `${username} adicionado(a) aos seus amigos!`;
+                    friendFeedbackOverlay.style.display = 'flex';
+                });
+            });
 
+            if (feedbackOkButton) {
+                feedbackOkButton.addEventListener('click', function() {
+                    friendFeedbackOverlay.style.display = 'none';
+                });
+            }
 
             // --- Lógica da Câmera no Story da Maria (CORRIGIDA!) ---
             async function startMariaStoryCamera() {
@@ -697,6 +817,8 @@
 
 
             // --- Lógica do Story do Ciclano (inalterada, exceto pelo Spotify) ---
+            const ciclanoStoryImage = document.getElementById('ciclanoStoryImage');
+
             function showCiclanoStory(index) {
                 if (ciclanoStoryImage && ciclanoStories.length > 0) { // Check before accessing array
                     if (index >= 0 && index < ciclanoStories.length) {
@@ -748,6 +870,7 @@
 
 
             // --- Lógica do Story do Amigo A ---
+            const amigoAStoryImage = document.getElementById('amigoAStoryImage');
             function showAmigoAStory(index = 0) {
                 closeAllOverlays();
                 if (amigoAStoryOverlay) amigoAStoryOverlay.classList.remove('hidden');
@@ -855,6 +978,7 @@
 
 
             // --- Lógica do Story do Amigo B ---
+            const amigoBStoryImage = document.getElementById('amigoBStoryImage');
             function showAmigoBStory(index = 0) {
                 closeAllOverlays();
                 if (amigoBStoryOverlay) amigoBStoryOverlay.classList.remove('hidden');
@@ -1072,8 +1196,7 @@
                                 </div>
                             </div>
                         ` : ''}
-                        <div class="flex justify-between items-center px-2">
-                            <div class="flex items-center">
+                        <div class="flex **justify-end** items-center px-2"> <div class="flex items-center">
                                 <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
                                     onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
                                 <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">0</span>

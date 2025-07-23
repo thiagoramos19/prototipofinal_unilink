@@ -548,7 +548,6 @@
 
             // Referências para os elementos do story da Maria
             const mariaStoryCircle = document.getElementById('mariaStoryCircle');
-            // AQUI ESTÁ A MUDANÇA: PEGAR A IMAGEM DA MARIA DIRETAMENTE
             const mariaStoryImageElement = document.getElementById('mariaStoryImage'); 
             const mariaAddButton = document.getElementById('mariaAddButton'); 
             const mariaStoryOverlay = document.getElementById('mariaStoryOverlay');
@@ -556,22 +555,23 @@
             const mariaStoryVideo = document.getElementById('mariaStoryVideo'); 
             let mariaTouchStartY = 0; 
 
-            // Referências para os elementos do story do Ciclano (inalterados para esta solicitação)
+            // Referências para os elementos do story do Ciclano 
             const ciclanoStoryCircle = document.getElementById('ciclanoStoryCircle');
             const ciclanoStoryOverlay = document.getElementById('ciclanoStoryOverlay');
             const ciclanoStories = ['img/storyciclano1.png', 'img/storyciclano2.png'];
             let currentCiclanoStoryIndex = 0;
             let ciclanoTouchStartY = 0;
             const closeCiclanoStoryButtonTop = document.getElementById('closeCiclanoStoryButtonTop'); 
-            // O spotifyRedirectButton não é mais necessário porque o iframe já está lá.
+            // O spotifyRedirectButton não é mais necessário.
 
-            // Referências para os stories do Amigo A e B (inalterados para esta solicitação)
+            // Referências para os stories do Amigo A e B 
             const amigoAStoryCircle = document.getElementById('amigoAStoryCircle');
             const amigoAStoryOverlay = document.getElementById('amigoAStoryOverlay');
             const amigoAStories = ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+2'];
             let currentAmigoAStoryIndex = 0;
             let amigoATouchStartY = 0;
             const closeAmigoAStoryButtonTop = document.getElementById('closeAmigoAStoryButtonTop'); 
+
 
             const amigoBStoryCircle = document.getElementById('amigoBStoryCircle');
             const amigoBStoryOverlay = document.getElementById('amigoBStoryOverlay');
@@ -580,14 +580,14 @@
             let amigoBTouchStartY = 0;
             const closeAmigoBStoryButtonTop = document.getElementById('closeAmigoBStoryButtonTop'); 
 
-            // Referências para a tela de Criar Post (inalterados para esta solicitação)
+            // Referências para a tela de Criar Post
             const createPostFab = document.getElementById('createPostFab');
             const createPostOverlay = document.getElementById('createPostOverlay');
             const closeCreatePostButton = document.getElementById('closeCreatePostButton');
             const publishPostButton = document.getElementById('publishPostButton'); 
             const postContentInput = document.getElementById('postContentInput');
 
-            // Referências para os botões de anexar mídia (inalterados para esta solicitação)
+            // Referências para os botões de anexar mídia
             const attachImageButton = document.getElementById('attachImageButton');
             const attachFileButton = document.getElementById('attachFileButton');
             const imageFileInput = document.getElementById('imageFileInput');
@@ -598,22 +598,32 @@
             let attachedFileType = null;
             let attachedFileSrc = null;
 
-            // Referência para o título da timeline (inalterados para esta solicitação)
+            // Referência para o título da timeline
             const timelineTitle = document.getElementById('timelineTitle');
             const mainHeader = document.getElementById('mainHeader');
 
-            // Overlay de Feedback de Amigo (inalterados para esta solicitação)
+            // Overlay de Feedback de Amigo
             const friendFeedbackOverlay = document.getElementById('friendFeedbackOverlay');
             const feedbackMessage = document.getElementById('feedbackMessage');
             const feedbackOkButton = document.getElementById('feedbackOkButton');
 
-            // --- Funções Comuns (ajustadas para parar a câmera da Maria) ---
+            // --- Funções Comuns ---
 
-            function toggleFilterMenu() { /* ... inalterado ... */ }
-            
+            function toggleFilterMenu() { 
+                if (filterMenu) { 
+                    if (filterMenu.classList.contains('hidden')) {
+                        filterMenu.classList.remove('hidden');
+                        if (overlay) overlay.style.display = 'block'; 
+                    } else {
+                        filterMenu.classList.add('hidden');
+                        if (overlay) overlay.style.display = 'none'; 
+                    }
+                }
+            }
+
             function closeAllOverlays() {
-                if (mariaStoryOverlay && !mariaStoryOverlay.classList.contains('hidden')) { // Verifica se o story da Maria está visível
-                    stopMariaStoryCamera(); // Para a câmera ao fechar o story da Maria
+                if (mariaStoryOverlay && !mariaStoryOverlay.classList.contains('hidden')) { 
+                    stopMariaStoryCamera(); 
                 }
                 if (mariaStoryOverlay) mariaStoryOverlay.classList.add('hidden');
                 if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.add('hidden');
@@ -626,61 +636,234 @@
                 if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
             }
 
-            function setupSwipeToClose(overlayElement, touchStartYVarName) { /* ... inalterado ... */ }
+            function setupSwipeToClose(overlayElement, touchStartYVarName) { 
+                if (overlayElement) { 
+                    overlayElement.addEventListener('touchstart', (e) => {
+                        window[touchStartYVarName] = e.touches[0].clientY;
+                    });
 
-            // --- Lógica do Filtro (inalterada) ---
-            // ... (filterButton, overlay, document click, applyFilters) ...
+                    overlayElement.addEventListener('touchend', (e) => {
+                        const touchEndY = e.changedTouches[0].clientY;
+                        if (touchEndY - window[touchStartYVarName] > 80) { 
+                            closeAllOverlays();
+                        }
+                    });
+                }
+            }
 
-            // --- Lógica das Estrelas de Avaliação (inalterada) ---
-            // ... (starRatings) ...
+            // --- Lógica do Filtro ---
+            if (filterButton) { 
+                filterButton.addEventListener('click', function(event) {
+                    event.stopPropagation(); 
+                    toggleFilterMenu();
+                });
+            }
 
-            // --- Lógica dos botões de Curtir (inalterada) ---
-            // ... (like-icon) ...
+            if (overlay) { 
+                overlay.addEventListener('click', function() {
+                    toggleFilterMenu();
+                });
+            }
 
-            // --- Lógica do Botão de Adicionar Amigo (inalterada) ---
-            // ... (add-friend-icon, feedbackOkButton) ...
+            document.addEventListener('click', function(event) {
+                const isClickInsideFilterMenu = (filterMenu && filterButton) ? 
+                                                (filterButton.contains(event.target) || filterMenu.contains(event.target)) : false;
+
+                if (!isClickInsideFilterMenu && filterMenu && !filterMenu.classList.contains('hidden')) {
+                    toggleFilterMenu();
+                }
+            });
+
+            const tweetCards = document.querySelectorAll('.tweet-card');
+            const jobFilterSwitch = document.getElementById('jobFilterSwitch');
+            const campusSelect = document.getElementById('campusSelect');
+            const campusLabel = document.getElementById('campusLabel');
+
+            function applyFilters() {
+                const jobFilterActive = jobFilterSwitch ? jobFilterSwitch.checked : false;
+                const selectedCampus = campusSelect ? campusSelect.value : 'todos';
+
+                if (timelineTitle) {
+                    if (jobFilterActive) {
+                        timelineTitle.textContent = 'Vagas';
+                    } else if (selectedCampus === 'todos') {
+                        timelineTitle.textContent = 'Timeline';
+                    } else {
+                        timelineTitle.textContent = selectedCampus.toUpperCase();
+                    }
+                }
+
+                if (mainHeader) {
+                    mainHeader.classList.remove('h-[75px]', 'h-[60px]', 'h-[63px]');
+
+                    if (jobFilterActive) {
+                        mainHeader.classList.add('h-[60px]');
+                    } else if (selectedCampus === 'cch') {
+                        mainHeader.classList.add('h-[63px]');
+                    } else if (selectedCampus === 'ccet' || selectedCampus === 'ccjp' || selectedCampus === 'ib') {
+                        mainHeader.classList.add('h-[60px]');
+                    }
+                    else {
+                        mainHeader.classList.add('h-[75px]');
+                    }
+                }
+
+                if (campusSelect && campusLabel) {
+                    if (jobFilterActive) {
+                        campusSelect.disabled = true;
+                        campusSelect.classList.add('opacity-50');
+                        campusSelect.classList.remove('text-white');
+                        campusSelect.classList.add('text-gray-400');
+                        campusLabel.classList.add('opacity-50', 'text-gray-400');
+                        campusLabel.classList.remove('text-gray-800');
+                    } else {
+                        campusSelect.disabled = false;
+                        campusSelect.classList.remove('opacity-50');
+                        campusSelect.classList.remove('text-gray-400');
+                        campusSelect.classList.add('text-white');
+                        campusLabel.classList.remove('opacity-50', 'text-gray-400');
+                        campusLabel.classList.add('text-gray-800');
+                    }
+                }
+
+                tweetCards.forEach(card => {
+                    const isJobOpening = card.dataset.type === 'job-opening';
+                    const cardCampus = card.dataset.campus;
+
+                    let showCard = true;
+
+                    if (jobFilterActive) {
+                        showCard = isJobOpening;
+                    } else {
+                        if (selectedCampus === 'todos') {
+                            showCard = true;
+                        } else if (cardCampus !== selectedCampus && !isJobOpening) {
+                            showCard = false;
+                        } else if (isJobOpening) {
+                            showCard = true;
+                        }
+                    }
+
+                    if (showCard) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            }
+
+            if (jobFilterSwitch) jobFilterSwitch.addEventListener('change', applyFilters);
+            if (campusSelect) campusSelect.addEventListener('change', applyFilters);
+
+            applyFilters();
+
+            // --- Lógica das Estrelas de Avaliação ---
+            const starRatings = document.querySelectorAll('.star-rating');
+            starRatings.forEach(ratingContainer => {
+                const stars = ratingContainer.querySelectorAll('img');
+                const currentRating = parseInt(ratingContainer.dataset.rating);
+
+                function updateStars(value) {
+                    stars.forEach((star, index) => {
+                        star.src = (index < value) ? 'img/estrelaacesa.png' : 'img/estrelaapagada.png';
+                        star.onerror = null;
+                    });
+                    ratingContainer.dataset.rating = value;
+                }
+                updateStars(currentRating);
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.dataset.value);
+                        updateStars(value);
+                        console.log('Avaliação enviada:', value);
+                    });
+                });
+            });
+
+            // --- Lógica dos botões de Curtir ---
+            document.querySelectorAll('.like-icon').forEach(button => {
+                button.addEventListener('click', function() {
+                    const likeCountSpan = this.nextElementSibling; // O span com a contagem de likes
+                    let currentLikes = parseInt(likeCountSpan.textContent);
+                    const hasLiked = likeCountSpan.dataset.liked === 'true';
+
+                    if (hasLiked) {
+                        this.src = 'img/like.png';
+                        currentLikes--;
+                        likeCountSpan.dataset.liked = 'false';
+                    } else {
+                        this.src = 'img/like2.png';
+                        currentLikes++;
+                        likeCountSpan.dataset.liked = 'true';
+                    }
+                    likeCountSpan.textContent = currentLikes;
+                });
+            });
 
 
-            // --- Lógica da Câmera no Story da Maria (CORRIGIDA!) ---
+            // --- Lógica do Botão de Adicionar Amigo ---
+            document.querySelectorAll('.add-friend-icon').forEach(button => {
+                if (button.dataset.username === "Maria") {
+                    button.classList.add('hidden');
+                    return; 
+                }
+
+                button.addEventListener('click', function() {
+                    const username = this.dataset.username;
+                    const isAdded = this.src.includes('adicionar2.png');
+
+                    if (!isAdded) {
+                        feedbackMessage.textContent = `Você adicionou ${username} aos amigos! Entre no Chat para conversar com ele(a/u).`;
+                        friendFeedbackOverlay.style.display = 'flex';
+                        this.src = 'img/adicionar2.png';
+                    } else {
+                        feedbackMessage.textContent = `${username} já é seu amigo(a/u)!`;
+                        friendFeedbackOverlay.style.display = 'flex';
+                    }
+                });
+            });
+
+            if (feedbackOkButton) {
+                feedbackOkButton.addEventListener('click', function() {
+                    friendFeedbackOverlay.style.display = 'none';
+                });
+            }
+
+
+            // --- Lógica da Câmera no Story da Maria ---
             async function startMariaStoryCamera() {
                 try {
-                    // Pede acesso à câmera (sem áudio para o story)
                     mariaStoryLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                    mariaStoryVideo.srcObject = mariaStoryLocalStream; // Conecta o stream ao elemento <video>
-                    mariaStoryOverlay.classList.remove('hidden'); // Mostra a overlay do story
-                    mariaStoryVideo.classList.remove('hidden'); // Garante que o vídeo esteja visível
+                    mariaStoryVideo.srcObject = mariaStoryLocalStream;
+                    mariaStoryOverlay.classList.remove('hidden');
+                    mariaStoryVideo.classList.remove('hidden');
                 } catch (error) {
                     console.error('Erro ao acessar a câmera para o story da Maria:', error);
                     alert('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
-                    // Se não conseguir a câmera, esconde o vídeo e mostra a imagem estática ou um fallback
-                    mariaStoryVideo.classList.add('hidden'); // Esconde o elemento de vídeo
-                    // Podemos manter o overlay visível, talvez mostrando um placeholder ou mensagem
+                    mariaStoryVideo.classList.add('hidden');
                     mariaStoryOverlay.classList.remove('hidden'); 
-                    // Por simplicidade, apenas escondi o vídeo. Se quiser um fallback visual aqui, me avisa.
                 }
             }
 
             function stopMariaStoryCamera() {
                 if (mariaStoryLocalStream) {
-                    mariaStoryLocalStream.getTracks().forEach(track => track.stop()); // Para todas as trilhas (vídeo)
+                    mariaStoryLocalStream.getTracks().forEach(track => track.stop());
                     mariaStoryLocalStream = null;
                     mariaStoryVideo.srcObject = null;
                 }
             }
 
-            // O `mariaStoryImageElement` é a imagem `maria.png` no feed.
-            // Clicar nela OU no `mariaAddButton` (o + na borda) deve iniciar o story com a câmera.
-            if (mariaStoryImageElement) { // Garante que o elemento existe
+            if (mariaStoryImageElement) { 
                 mariaStoryImageElement.addEventListener('click', function(event) {
-                    event.stopPropagation(); // Importante para não disparar eventos de elementos pais
-                    closeAllOverlays(); // Fecha outros overlays antes de abrir o story
-                    startMariaStoryCamera(); // Inicia a câmera para o story da Maria
+                    event.stopPropagation();
+                    closeAllOverlays();
+                    startMariaStoryCamera();
                 });
             }
 
             if (mariaAddButton) {
                 mariaAddButton.addEventListener('click', function(event) {
-                    event.stopPropagation(); // Evita que o clique se propague
+                    event.stopPropagation();
                     closeAllOverlays();
                     startMariaStoryCamera();
                 });
@@ -688,7 +871,7 @@
 
             if (closeMariaStoryButton) {
                 closeMariaStoryButton.addEventListener('click', function() {
-                    closeAllOverlays(); // Esta função já cuida de parar a câmera agora
+                    closeAllOverlays();
                 });
             }
             if (mariaStoryOverlay) {
@@ -696,9 +879,9 @@
             }
 
 
-            // --- Lógica do Story do Ciclano (inalterada, exceto pelo Spotify) ---
+            // --- Lógica do Story do Ciclano ---
             function showCiclanoStory(index) {
-                if (ciclanoStoryImage && ciclanoStories.length > 0) { // Check before accessing array
+                if (ciclanoStoryImage && ciclanoStories.length > 0) { 
                     if (index >= 0 && index < ciclanoStories.length) {
                         currentCiclanoStoryIndex = index;
                         ciclanoStoryImage.src = ciclanoStories[currentCiclanoStoryIndex];
@@ -708,7 +891,6 @@
                         };
                     } else if (index >= ciclanoStories.length) {
                         closeAllOverlays();
-                        // openAmigoAStory(); // Comentado para evitar navegação automática entre stories
                     } else if (index < 0) {
                         closeAllOverlays();
                     }
@@ -720,28 +902,15 @@
                 if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.remove('hidden');
                 currentCiclanoStoryIndex = 0;
                 showCiclanoStory(currentCiclanoStoryIndex);
-                // Referências para elementos que não existem mais (removidos pelo iframe do Spotify)
-                // if (ciclanoStoryInput) ciclanoStoryInput.value = '';
-                // if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
             }
 
             if (ciclanoStoryCircle) {
                 ciclanoStoryCircle.addEventListener('click', openCiclanoStory);
             }
 
-            // Removi os event listeners para ciclanoStoryLeftClick e ciclanoStoryRightClick
-            // já que a intenção era o iframe, e não ter swipe no post com Spotify.
-            // Se precisar de swipe dentro do overlay do Story do Ciclano (imagem), avisa!
-
             if (ciclanoStoryOverlay) {
                 setupSwipeToClose(ciclanoStoryOverlay, 'ciclanoTouchStartY');
             }
-            // Se os inputs e botões de reação não são para os stories estáticos, pode ignorar essas linhas.
-            // if (ciclanoStoryInput && ciclanoStorySendButton) { /* ... */ }
-            // if (ciclanoReactionButton) { /* ... */ }
-            // if (ciclanoReactionHeart) { /* ... */ }
-            // if (ciclanoReactionStars) { /* ... */ }
-            // if (ciclanoStoryOverlay) { /* ... */ }
             if (closeCiclanoStoryButtonTop) {
                 closeCiclanoStoryButtonTop.addEventListener('click', closeAllOverlays);
             }
@@ -752,15 +921,13 @@
                 closeAllOverlays();
                 if (amigoAStoryOverlay) amigoAStoryOverlay.classList.remove('hidden');
                 currentAmigoAStoryIndex = index;
-                // Assegura que amigoAStoryImage e amigoAStories.length > 0 existam antes de acessar
-                if (amigoAStoryImage && amigoAStories.length > 0) { 
-                    amigoAStoryImage.src = amigoAStories[currentAmigoAStoryIndex];
-                    amigoAStoryImage.onerror = function() {
+                if (document.getElementById('amigoAStoryImage') && amigoAStories.length > 0) { 
+                    document.getElementById('amigoAStoryImage').src = amigoAStories[currentAmigoAStoryIndex];
+                    document.getElementById('amigoAStoryImage').onerror = function() {
                         this.onerror = null;
                         this.src = 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+ERRO';
                     };
                 }
-                // Limpeza de inputs e menus de reação se existirem
                 if (document.getElementById('amigoAStoryInput')) document.getElementById('amigoAStoryInput').value = '';
                 if (document.getElementById('amigoAReactionMenu')) document.getElementById('amigoAReactionMenu').classList.add('hidden');
             }
@@ -779,8 +946,6 @@
             if (amigoAStoryOverlay) {
                 setupSwipeToClose(amigoAStoryOverlay, 'amigoATouchStartY');
             }
-            // AQUI: Lógica de navegação entre stories (clique na metade esquerda/direita)
-            // Certifique-se de que os elementos existam antes de adicionar listeners
             const amigoAStoryLeftClick = document.getElementById('amigoAStoryLeftClick');
             const amigoAStoryRightClick = document.getElementById('amigoAStoryRightClick');
 
@@ -791,7 +956,6 @@
                         showAmigoAStory(currentAmigoAStoryIndex - 1);
                     } else {
                         closeAllOverlays();
-                        // openCiclanoStory(ciclanoStories.length - 1); // Pode precisar ajustar a lógica de "story anterior"
                     }
                 });
             }
@@ -806,7 +970,6 @@
                     }
                 });
             }
-            // Lógica para input/botões de reação nos stories
             const amigoAStoryInput = document.getElementById('amigoAStoryInput');
             const amigoAStorySendButton = document.getElementById('amigoAStorySendButton');
             const amigoAReactionButton = document.getElementById('amigoAReactionButton');
@@ -859,15 +1022,13 @@
                 closeAllOverlays();
                 if (amigoBStoryOverlay) amigoBStoryOverlay.classList.remove('hidden');
                 currentAmigoBStoryIndex = index;
-                // Assegura que amigoBStoryImage e amigoBStories.length > 0 existam antes de acessar
-                if (amigoBStoryImage && amigoBStories.length > 0) { 
-                    amigoBStoryImage.src = amigoBStories[currentAmigoBStoryIndex];
-                    amigoBStoryImage.onerror = function() {
+                if (document.getElementById('amigoBStoryImage') && amigoBStories.length > 0) { 
+                    document.getElementById('amigoBStoryImage').src = amigoBStories[currentAmigoBStoryIndex];
+                    document.getElementById('amigoBStoryImage').onerror = function() {
                         this.onerror = null;
                         this.src = 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+ERRO';
                     };
                 }
-                // Limpeza de inputs e menus de reação se existirem
                 if (document.getElementById('amigoBStoryInput')) document.getElementById('amigoBStoryInput').value = '';
                 if (document.getElementById('amigoBReactionMenu')) document.getElementById('amigoBReactionMenu').classList.add('hidden');
             }
@@ -885,8 +1046,6 @@
             if (amigoBStoryOverlay) {
                 setupSwipeToClose(amigoBStoryOverlay, 'amigoBTouchStartY');
             }
-            // AQUI: Lógica de navegação entre stories (clique na metade esquerda/direita)
-            // Certifique-se de que os elementos existam antes de adicionar listeners
             const amigoBStoryLeftClick = document.getElementById('amigoBStoryLeftClick');
             const amigoBStoryRightClick = document.getElementById('amigoBStoryRightClick');
             
@@ -897,7 +1056,6 @@
                         showAmigoBStory(currentAmigoBStoryIndex - 1);
                     } else {
                         closeAllOverlays();
-                        openAmigoAStory(amigoAStories.length - 1); // Pode precisar ajustar a lógica de "story anterior"
                     }
                 });
             }
@@ -911,7 +1069,6 @@
                     }
                 });
             }
-            // Lógica para input/botões de reação nos stories
             const amigoBStorySendButton = document.getElementById('amigoBStorySendButton');
             const amigoBReactionButton = document.getElementById('amigoBReactionButton');
             const amigoBReactionMenu = document.getElementById('amigoBReactionMenu');
@@ -1072,8 +1229,7 @@
                                 </div>
                             </div>
                         ` : ''}
-                        <div class="flex justify-between items-center px-2">
-                            <div class="flex items-center">
+                        <div class="flex justify-end items-center px-2"> <div class="flex items-center">
                                 <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
                                     onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
                                 <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">0</span>
@@ -1117,7 +1273,5 @@
 
         }); // Fim do DOMContentLoaded
     </script>
-</body>
-</html>
 </body>
 </html>

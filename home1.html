@@ -37,7 +37,7 @@
         }
 
         /* Estilo para a sobreposição de qualquer Story (genérico) */
-        .story-overlay, .create-post-overlay {
+        .story-overlay, .create-post-overlay, .camera-overlay, .captured-photo-story-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -100,7 +100,7 @@
             z-index: 50; /* Z-index mais alto que o normal, mas abaixo dos feedbacks */
         }
 
-        .maria-story-video-overlay .content-wrapper {
+        .maria-story-video-overlay .content-wrapper, .camera-overlay .content-wrapper, .captured-photo-story-overlay .content-wrapper {
             width: 393px; /* Largura da tela do celular */
             height: 852px; /* Altura da tela do celular */
             border: 4px solid black; /* Borda preta */
@@ -112,7 +112,7 @@
             background-color: #f0f0f0;
         }
 
-        .maria-story-video-overlay video {
+        .maria-story-video-overlay video, .camera-overlay video {
             width: 100%;
             height: 100%;
             object-fit: cover; /* Garante que o vídeo preencha o espaço */
@@ -174,7 +174,7 @@
                 </button>
             </div>
 
-            <div class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
+            <div id="storiesContainer" class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
                 <div id="mariaStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-black flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="img/maria.png" alt="Story de Maria" id="mariaStoryImage" class="w-[53px] h-[53px] rounded-full object-cover"
                         onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
@@ -354,12 +354,39 @@
             +
         </button>
 
+        <button id="takePhotoFab" class="absolute bottom-[140px] right-[20px] w-[50px] h-[50px] rounded-full bg-green-500 border-[2px] border-black flex items-center justify-center shadow-lg z-40">
+            <img src="img/foto.png" alt="Ícone de Câmera" class="w-[30px] h-[30px] object-contain"
+                onerror="this.onerror=null;this.src='https://placehold.co/30x30/cccccc/FFFFFF?text=CAM';">
+        </button>
+
     </div>
 
     <div id="mariaStoryOverlay" class="maria-story-video-overlay hidden">
         <div class="content-wrapper">
             <video id="mariaStoryVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
             <button id="closeMariaStoryButton" class="absolute bottom-[20px] left-1/2 -translate-x-1/2 w-[148px] h-[33px] bg-[#002c5c] text-white font-bold text-[14px] rounded-14px flex items-center justify-center">
+                Voltar para home
+            </button>
+        </div>
+    </div>
+
+    <div id="cameraOverlay" class="camera-overlay hidden">
+        <div class="content-wrapper">
+            <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+            <button id="capturePhotoButton" class="absolute bottom-[20px] left-1/2 -translate-x-1/2 w-[60px] h-[60px] rounded-full bg-white border-4 border-black flex items-center justify-center shadow-lg">
+                <div class="w-[40px] h-[40px] rounded-full bg-red-500"></div>
+            </button>
+            <button id="closeCameraButton" class="absolute top-[20px] right-[20px] text-white text-3xl font-bold">
+                X
+            </button>
+        </div>
+        <canvas id="captureCanvas" class="hidden"></canvas>
+    </div>
+
+    <div id="capturedPhotoStoryOverlay" class="captured-photo-story-overlay hidden">
+        <div class="content-wrapper">
+            <img id="capturedStoryImage" src="" alt="Sua Foto de Story" class="w-full h-full object-contain">
+            <button id="closeCapturedStoryButton" class="absolute bottom-[20px] left-1/2 -translate-x-1/2 w-[148px] h-[33px] bg-[#002c5c] text-white font-bold text-[14px] rounded-14px flex items-center justify-center">
                 Voltar para home
             </button>
         </div>
@@ -540,6 +567,8 @@
 
     <script>
         let mariaStoryLocalStream; // Variável para o stream da webcam do story da Maria
+        let cameraLocalStream; // Variável para o stream da webcam da câmera de foto
+        let capturedPhotoDataUrl = null; // Para armazenar a foto tirada
 
         document.addEventListener('DOMContentLoaded', (event) => {
             const filterButton = document.getElementById('filterButton');
@@ -607,6 +636,21 @@
             const feedbackMessage = document.getElementById('feedbackMessage');
             const feedbackOkButton = document.getElementById('feedbackOkButton');
 
+            // NOVO: Elementos da Câmera para Tirar Foto
+            const takePhotoFab = document.getElementById('takePhotoFab');
+            const cameraOverlay = document.getElementById('cameraOverlay');
+            const cameraVideo = document.getElementById('cameraVideo');
+            const capturePhotoButton = document.getElementById('capturePhotoButton');
+            const closeCameraButton = document.getElementById('closeCameraButton');
+            const captureCanvas = document.getElementById('captureCanvas');
+
+            // NOVO: Elementos do Story da Foto Capturada
+            const capturedPhotoStoryOverlay = document.getElementById('capturedPhotoStoryOverlay');
+            const capturedStoryImage = document.getElementById('capturedStoryImage');
+            const closeCapturedStoryButton = document.getElementById('closeCapturedStoryButton');
+            const storiesContainer = document.getElementById('storiesContainer');
+            let newStoryCounter = 0; // Para gerar IDs únicos para novos stories
+
             // --- Funções Comuns ---
 
             function toggleFilterMenu() { 
@@ -625,6 +669,9 @@
                 if (mariaStoryOverlay && !mariaStoryOverlay.classList.contains('hidden')) { 
                     stopMariaStoryCamera(); 
                 }
+                if (cameraOverlay && !cameraOverlay.classList.contains('hidden')) {
+                    stopCamera();
+                }
                 if (mariaStoryOverlay) mariaStoryOverlay.classList.add('hidden');
                 if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.add('hidden');
                 if (amigoAStoryOverlay) amigoAStoryOverlay.classList.add('hidden');
@@ -634,6 +681,8 @@
                 if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
                 if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
                 if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
+                if (cameraOverlay) cameraOverlay.classList.add('hidden'); // NOVO
+                if (capturedPhotoStoryOverlay) capturedPhotoStoryOverlay.classList.add('hidden'); // NOVO
             }
 
             function setupSwipeToClose(overlayElement, touchStartYVarName) { 
@@ -1270,6 +1319,88 @@
                     });
                 });
             }
+
+            // --- NOVO: Lógica de Tirar Foto e Criar Story ---
+
+            async function startCamera() {
+                try {
+                    cameraLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    cameraVideo.srcObject = cameraLocalStream;
+                    cameraOverlay.classList.remove('hidden');
+                } catch (error) {
+                    console.error('Erro ao acessar a câmera:', error);
+                    alert('Amada, não consegui acessar sua câmera! Tem certeza que deu permissão?');
+                    cameraOverlay.classList.add('hidden');
+                }
+            }
+
+            function stopCamera() {
+                if (cameraLocalStream) {
+                    cameraLocalStream.getTracks().forEach(track => track.stop());
+                    cameraLocalStream = null;
+                    cameraVideo.srcObject = null;
+                }
+            }
+
+            if (takePhotoFab) {
+                takePhotoFab.addEventListener('click', function() {
+                    closeAllOverlays();
+                    startCamera();
+                });
+            }
+
+            if (closeCameraButton) {
+                closeCameraButton.addEventListener('click', function() {
+                    closeAllOverlays();
+                });
+            }
+
+            if (capturePhotoButton) {
+                capturePhotoButton.addEventListener('click', function() {
+                    const context = captureCanvas.getContext('2d');
+                    captureCanvas.width = cameraVideo.videoWidth;
+                    captureCanvas.height = cameraVideo.videoHeight;
+                    context.drawImage(cameraVideo, 0, 0, captureCanvas.width, captureCanvas.height);
+                    capturedPhotoDataUrl = captureCanvas.toDataURL('image/png');
+                    
+                    createNewStoryCircle(capturedPhotoDataUrl);
+                    closeAllOverlays();
+                });
+            }
+
+            function createNewStoryCircle(imageDataUrl) {
+                newStoryCounter++;
+                const newStoryId = `userStory${newStoryCounter}`;
+
+                const newStoryDiv = document.createElement('div');
+                newStoryDiv.id = newStoryId;
+                newStoryDiv.classList.add('relative', 'w-[63px]', 'h-[63px]', 'rounded-full', 'border-[3px]', 'border-[#e5a1ae]', 'flex-shrink-0', 'flex', 'items-center', 'justify-center', 'cursor-pointer');
+                
+                newStoryDiv.innerHTML = `
+                    <img src="img/maria.png" alt="Seu Story" class="w-[53px] h-[53px] rounded-full object-cover"
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
+                    >
+                `;
+                
+                // Adiciona o novo story no início da lista de stories
+                storiesContainer.insertBefore(newStoryDiv, storiesContainer.firstChild);
+
+                newStoryDiv.addEventListener('click', function() {
+                    closeAllOverlays();
+                    capturedStoryImage.src = imageDataUrl;
+                    capturedPhotoStoryOverlay.classList.remove('hidden');
+                });
+            }
+
+            if (closeCapturedStoryButton) {
+                closeCapturedStoryButton.addEventListener('click', function() {
+                    closeAllOverlays();
+                });
+            }
+
+            // Configura swipe para fechar o overlay da câmera e do story capturado
+            setupSwipeToClose(cameraOverlay, 'cameraTouchStartY'); // Adicione uma variável para touchStartY se for usar swipe na câmera
+            setupSwipeToClose(capturedPhotoStoryOverlay, 'capturedStoryTouchStartY'); // Adicione uma variável para touchStartY se for usar swipe no story capturado
 
         }); // Fim do DOMContentLoaded
     </script>

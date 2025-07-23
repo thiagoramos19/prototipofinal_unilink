@@ -175,6 +175,11 @@
             </div>
 
             <div id="storiesContainer" class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
+                <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
+                    <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
+                    >
+                </div>
                 <div id="mariaStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-black flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="img/maria.png" alt="Story de Maria" id="mariaStoryImage" class="w-[53px] h-[53px] rounded-full object-cover"
                         onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
@@ -184,18 +189,8 @@
                     </div>
                 </div>
 
-                <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
-                    <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
-                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
-                    >
-                </div>
-
                 <div class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center">
                     <img src="https://placehold.co/53x53/cccccc/000000?text=A" alt="Story do Amigo A" class="w-[53px] h-[53px] rounded-full object-cover"
-                    >
-                </div>
-                <div class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center">
-                    <img src="https://placehold.co/53x53/cccccc/000000?text=B" alt="Story do Amigo B" class="w-[53px] h-[53px] rounded-full object-cover"
                     >
                 </div>
             </div>
@@ -354,12 +349,6 @@
         <button id="createPostFab" class="absolute bottom-[80px] right-[20px] w-[50px] h-[50px] rounded-full bg-[#026dad] border-[2px] border-black flex items-center justify-center text-white text-3xl font-bold shadow-lg z-40">
             +
         </button>
-
-        <button id="takePhotoFab" class="absolute bottom-[140px] right-[20px] w-[50px] h-[50px] rounded-full bg-green-500 border-[2px] border-black flex items-center justify-center shadow-lg z-40 hidden">
-            <img src="img/foto.png" alt="Ícone de Câmera" class="w-[30px] h-[30px] object-contain"
-                onerror="this.onerror=null;this.src='https://placehold.co/30x30/cccccc/FFFFFF?text=CAM';">
-        </button>
-
     </div>
 
     <div id="mariaStoryOverlay" class="maria-story-video-overlay hidden">
@@ -471,45 +460,6 @@
         </div>
     </div>
 
-    <div id="amigoBStoryOverlay" class="story-overlay hidden">
-        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <button id="closeAmigoBStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
-                Voltar para home
-            </button>
-            <img id="amigoBStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B" 
-                alt="Story do Amigo B" 
-                class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B';">
-            
-            <div class="story-click-area left" id="amigoBStoryLeftClick"></div>
-            <div class="story-click-area right" id="amigoBStoryRightClick"></div>
-            
-            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
-                <input type="text" id="amigoBStoryInput" placeholder="Digite aqui"
-                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="amigoBStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
-            </div>
-            <button id="amigoBReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
-                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
-            </button>
-            <div id="amigoBReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
-                <button id="amigoBReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
-                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
-                </button>
-                <button id="amigoBReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
-                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div id="createPostOverlay" class="create-post-overlay hidden ">
         <div class="content-wrapper">
             <header class="w-full h-[60px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md z-10">
@@ -609,13 +559,6 @@
             const closeAmigoAStoryButtonTop = document.getElementById('closeAmigoAStoryButtonTop'); 
 
 
-            const amigoBStoryCircle = document.getElementById('amigoBStoryCircle');
-            const amigoBStoryOverlay = document.getElementById('amigoBStoryOverlay');
-            const amigoBStories = ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+2'];
-            let currentAmigoBStoryIndex = 0;
-            let amigoBTouchStartY = 0;
-            const closeAmigoBStoryButtonTop = document.getElementById('closeAmigoBStoryButtonTop'); 
-
             // Referências para a tela de Criar Post
             const createPostFab = document.getElementById('createPostFab');
             const createPostOverlay = document.getElementById('createPostOverlay');
@@ -683,12 +626,10 @@
                 if (mariaStoryOverlay) mariaStoryOverlay.classList.add('hidden');
                 if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.add('hidden');
                 if (amigoAStoryOverlay) amigoAStoryOverlay.classList.add('hidden');
-                if (amigoBStoryOverlay) amigoBStoryOverlay.classList.add('hidden');
                 if (createPostOverlay) createPostOverlay.classList.add('hidden');
                 if (friendFeedbackOverlay) friendFeedbackOverlay.style.display = 'none';
                 if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
                 if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
-                if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
                 if (cameraOverlay) cameraOverlay.classList.add('hidden'); 
                 if (capturedPhotoStoryOverlay) capturedPhotoStoryOverlay.classList.add('hidden'); 
             }
@@ -1023,7 +964,6 @@
                         showAmigoAStory(currentAmigoAStoryIndex + 1);
                     } else {
                         closeAllOverlays();
-                        openAmigoBStory();
                     }
                 });
             }
@@ -1071,104 +1011,6 @@
             }
             if (closeAmigoAStoryButtonTop) {
                 closeAmigoAStoryButtonTop.addEventListener('click', closeAllOverlays);
-            }
-
-
-            // --- Lógica do Story do Amigo B ---
-            function showAmigoBStory(index = 0) {
-                closeAllOverlays();
-                if (amigoBStoryOverlay) amigoBStoryOverlay.classList.remove('hidden');
-                currentAmigoBStoryIndex = index;
-                if (document.getElementById('amigoBStoryImage') && amigoBStories.length > 0) { 
-                    document.getElementById('amigoBStoryImage').src = amigoBStories[currentAmigoBStoryIndex];
-                    document.getElementById('amigoBStoryImage').onerror = function() {
-                        this.onerror = null;
-                        this.src = 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+ERRO';
-                    };
-                }
-                if (document.getElementById('amigoBStoryInput')) document.getElementById('amigoBStoryInput').value = '';
-                if (document.getElementById('amigoBReactionMenu')) document.getElementById('amigoBReactionMenu').classList.add('hidden');
-            }
-
-            function openAmigoBStory() {
-                closeAllOverlays();
-                if (amigoBStoryOverlay) amigoBStoryOverlay.classList.remove('hidden');
-                currentAmigoBStoryIndex = 0;
-                showAmigoBStory(currentAmigoBStoryIndex);
-            }
-
-            if (amigoBStoryCircle) {
-                amigoBStoryCircle.addEventListener('click', openAmigoBStory);
-            }
-            if (amigoBStoryOverlay) {
-                setupSwipeToClose(amigoBStoryOverlay, 'amigoBTouchStartY');
-            }
-            const amigoBStoryLeftClick = document.getElementById('amigoBStoryLeftClick');
-            const amigoBStoryRightClick = document.getElementById('amigoBStoryRightClick');
-            
-            if (amigoBStoryLeftClick) {
-                amigoBStoryLeftClick.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (currentAmigoBStoryIndex > 0) {
-                        showAmigoBStory(currentAmigoBStoryIndex - 1);
-                    } else {
-                        closeAllOverlays();
-                    }
-                });
-            }
-            if (amigoBStoryRightClick) {
-                amigoBStoryRightClick.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (currentAmigoBStoryIndex < amigoBStories.length - 1) {
-                        showAmigoBStory(currentAmigoBStoryIndex + 1);
-                    } else {
-                        closeAllOverlays();
-                    }
-                });
-            }
-            const amigoBStorySendButton = document.getElementById('amigoBStorySendButton');
-            const amigoBReactionButton = document.getElementById('amigoBReactionButton');
-            const amigoBReactionMenu = document.getElementById('amigoBReactionMenu');
-            const amigoBReactionHeart = document.getElementById('amigoBReactionHeart');
-            const amigoBReactionStars = document.getElementById('amigoBReactionStars');
-
-            if (amigoBStorySendButton) {
-                amigoBStorySendButton.addEventListener('click', function() {
-                    if (document.getElementById('amigoBStoryInput').value.trim() !== '') {
-                        console.log("Mensagem Amigo B: " + document.getElementById('amigoBStoryInput').value);
-                        document.getElementById('amigoBStoryInput').value = '';
-                    }
-                });
-            }
-            if (amigoBReactionButton) {
-                amigoBReactionButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (amigoBReactionMenu) amigoBReactionMenu.classList.toggle('hidden');
-                });
-            }
-            if (amigoBReactionHeart) {
-                amigoBReactionHeart.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    console.log('Reação Amigo B: Coração');
-                    if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
-                });
-            }
-            if (amigoBReactionStars) {
-                amigoBReactionStars.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    console.log('Reação Amigo B: Estrelas');
-                    if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
-                });
-            }
-            if (amigoBStoryOverlay) {
-                amigoBStoryOverlay.addEventListener('click', function(event) {
-                    if (amigoBReactionButton && amigoBReactionMenu && !amigoBReactionButton.contains(event.target) && !amigoBReactionMenu.contains(event.target) && !amigoBReactionMenu.classList.contains('hidden')) {
-                        amigoBReactionMenu.classList.add('hidden');
-                    }
-                });
-            }
-            if (closeAmigoBStoryButtonTop) {
-                closeAmigoBStoryButtonTop.addEventListener('click', closeAllOverlays);
             }
 
             // --- Lógica da Tela de Criar Post ---
@@ -1358,14 +1200,6 @@
                 }
             }
 
-            // O takePhotoFab não existe mais na parte principal do HTML, ele foi movido para o footer do createPostOverlay
-            // if (takePhotoFab) {
-            //     takePhotoFab.addEventListener('click', function() {
-            //         closeAllOverlays();
-            //         startCamera();
-            //     });
-            // }
-
             if (closeCameraButton) {
                 closeCameraButton.addEventListener('click', function() {
                     closeAllOverlays();
@@ -1400,7 +1234,7 @@
                 `;
                 
                 // Adiciona o novo story no início da lista de stories
-                storiesContainer.insertBefore(newStoryDiv, storiesContainer.firstChild);
+                storiesContainer.insertBefore(newStoryDiv, storiesContainer.children[1]); // Inserir depois do Ciclano
 
                 newStoryDiv.addEventListener('click', function() {
                     closeAllOverlays();

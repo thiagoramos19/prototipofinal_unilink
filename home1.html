@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* A família Inter, porque a gente ama consistência e um visual clean! */
+        /* A família Nunito, porque a gente ama consistência e um visual clean! */
         body {
             font-family: "Nunito", sans-serif;
             margin: 0;
@@ -139,10 +139,24 @@
 
         #main::-webkit-scrollbar {
             
-    display: none; /* Esconde a barra de rolagem visualmente */
-    width: 0; /* Garante que não ocupe espaço horizontal */
-    height: 0; /* Garante que não ocupe espaço vertical */
-}
+            display: none; /* Esconde a barra de rolagem visualmente */
+            width: 0; /* Garante que não ocupe espaço horizontal */
+            height: 0; /* Garante que não ocupe espaço vertical */
+        }
+
+        /* Estilo para a caixa de mensagem personalizada */
+        .message-box {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* MUITO ALTO para aparecer por cima de tudo */
+        }
     </style>
 </head>
 <body>
@@ -167,7 +181,7 @@
                 <span id="timelineTitle" class="text-black font-bold text-[18px] text-left flex-grow flex-shrink-0 truncate">Timeline</span>
                 
                 <button id="filterButton" class="w-[43px] h-[22px] bg-[#ffb5a6] rounded-14px
-                                         flex items-center justify-center shadow-md ml-auto flex-shrink-0">
+                                                 flex items-center justify-center shadow-md ml-auto flex-shrink-0">
                     <img src="img/filtro_icon.png" alt="Ícone de Filtro" class="w-[15px] h-[15px] object-contain"
                         onerror="this.onerror=null;this.src='https://placehold.co/15x15/ffb5a6/000000?text=F';"
                         title="Filtro">
@@ -190,11 +204,11 @@
                     >
                 </div>
 
-                <div class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center">
+                <div id="amigoAStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="https://placehold.co/53x53/cccccc/000000?text=A" alt="Story do Amigo A" class="w-[53px] h-[53px] rounded-full object-cover"
                     >
                 </div>
-                <div class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center">
+                <div id="amigoBStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
                     <img src="https://placehold.co/53x53/cccccc/000000?text=B" alt="Story do Amigo B" class="w-[53px] h-[53px] rounded-full object-cover"
                     >
                 </div>
@@ -227,8 +241,19 @@
                         onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=C';">
                     <span class="font-bold text-[14px] text-gray-800">Ciclano - CCH - Biblioteconomia</span>
                 </div>
-                <div class="w-[370px] mx-auto my-2 relative">
-                    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/5p48T2Tqm7xX3ym7uslGOg?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <!-- Retângulo Verde para Música/Mídia - Revertido para o estilo antigo -->
+                <div class="w-[370px] h-[52px] bg-[#1ed760] rounded-lg flex items-center px-2 mx-auto my-2 relative">
+                    <img src="img/marinasena.png" alt="Capa da Música Marina Sena" class="w-[40px] h-[40px] rounded object-cover mr-2"
+                        onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=MS';"
+                    >
+                    <div class="flex flex-col justify-center flex-grow">
+                        <span class="font-bold text-[13px] text-white">Escutando "Doçura (part. Çantamarta)"</span>
+                        <span class="text-[13px] text-white mt-0.5">De Marina Sena</span>
+                    </div>
+                    <!-- Botão de Ação no Retângulo Verde -->
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 w-[20px] h-[20px] rounded-full border-[1px] border-black flex items-center justify-center bg-white">
+                        <span class="text-black font-bold text-sm">+</span>
+                    </div>
                 </div>
                 
                 <div class="star-rating flex justify-between w-[360px] mx-auto mt-1 mb-1" data-rating="0">
@@ -356,6 +381,7 @@
 
     </div>
 
+    <!-- Sobreposição para o Story da Maria (com câmera) -->
     <div id="mariaStoryOverlay" class="maria-story-video-overlay hidden">
         <div class="content-wrapper">
             <video id="mariaStoryVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
@@ -365,6 +391,7 @@
         </div>
     </div>
 
+    <!-- Sobreposição para o Story do Ciclano -->
     <div id="ciclanoStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
             <button id="closeCiclanoStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
@@ -404,6 +431,7 @@
         </div>
     </div>
 
+    <!-- Sobreposição para o Story do Amigo A -->
     <div id="amigoAStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
             <button id="closeAmigoAStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
@@ -411,7 +439,7 @@
             </button>
             <img id="amigoAStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A" 
                 alt="Story do Amigo A" 
-                class="w-full h- border-4 border-black rounded-3xl object-cover"
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
                 onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A';">
             
             <div class="story-click-area left" id="amigoAStoryLeftClick"></div>
@@ -443,6 +471,7 @@
         </div>
     </div>
 
+    <!-- Sobreposição para o Story do Amigo B -->
     <div id="amigoBStoryOverlay" class="story-overlay hidden">
         <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
             <button id="closeAmigoBStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
@@ -537,9 +566,79 @@
         </div>
     </div>
 
+    <!-- Custom Message Box (replaces alert) -->
+    <div id="messageBox" class="message-box hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+            <p id="messageText" class="text-lg font-semibold mb-4"></p>
+            <button id="messageOkButton" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Ok!</button>
+        </div>
+    </div>
 
     <script>
         let mariaStoryLocalStream; // Variável para o stream da webcam do story da Maria
+
+        // Objeto para gerenciar os dados de todos os stories de forma centralizada
+        const storyData = {
+            maria: {
+                circleId: 'mariaStoryCircle',
+                overlayId: 'mariaStoryOverlay',
+                videoElementId: 'mariaStoryVideo', // Para o stream da câmera
+                closeButtonId: 'closeMariaStoryButton',
+                touchStartYVar: 'mariaTouchStartY',
+                type: 'camera' // Tipo especial para story de câmera
+            },
+            ciclano: {
+                circleId: 'ciclanoStoryCircle',
+                overlayId: 'ciclanoStoryOverlay',
+                imageElementId: 'ciclanoStoryImage',
+                leftClickAreaId: 'ciclanoStoryLeftClick',
+                rightClickAreaId: 'ciclanoStoryRightClick',
+                reactionButtonId: 'ciclanoReactionButton',
+                reactionMenuId: 'ciclanoReactionMenu',
+                reactionHeartId: 'ciclanoReactionHeart',
+                reactionStarsId: 'ciclanoReactionStars',
+                closeButtonId: 'closeCiclanoStoryButtonTop',
+                touchStartYVar: 'ciclanoTouchStartY',
+                stories: ['img/storyciclano1.png', 'img/storyciclano2.png'],
+                currentIndex: 0,
+                nextStoryPerson: 'amigoA' // Próxima pessoa na sequência de stories
+            },
+            amigoA: {
+                circleId: 'amigoAStoryCircle',
+                overlayId: 'amigoAStoryOverlay',
+                imageElementId: 'amigoAStoryImage',
+                leftClickAreaId: 'amigoAStoryLeftClick',
+                rightClickAreaId: 'amigoAStoryRightClick',
+                reactionButtonId: 'amigoAReactionButton',
+                reactionMenuId: 'amigoAReactionMenu',
+                reactionHeartId: 'amigoAReactionHeart',
+                reactionStarsId: 'amigoAReactionStars',
+                closeButtonId: 'closeAmigoAStoryButtonTop',
+                touchStartYVar: 'amigoATouchStartY',
+                stories: ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+2'],
+                currentIndex: 0,
+                nextStoryPerson: 'amigoB',
+                prevStoryPerson: 'ciclano' // Pessoa anterior na sequência de stories
+            },
+            amigoB: {
+                circleId: 'amigoBStoryCircle',
+                overlayId: 'amigoBStoryOverlay',
+                imageElementId: 'amigoBStoryImage',
+                leftClickAreaId: 'amigoBStoryLeftClick',
+                rightClickAreaId: 'amigoBStoryRightClick',
+                reactionButtonId: 'amigoBReactionButton',
+                reactionMenuId: 'amigoBReactionMenu',
+                reactionHeartId: 'amigoBReactionHeart',
+                reactionStarsId: 'amigoBReactionStars',
+                closeButtonId: 'closeAmigoBStoryButtonTop',
+                touchStartYVar: 'amigoBTouchStartY',
+                stories: ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+2'],
+                currentIndex: 0,
+                prevStoryPerson: 'amigoA'
+            }
+        };
+
+        let activeStoryKey = null; // Para rastrear qual story está aberto
 
         document.addEventListener('DOMContentLoaded', (event) => {
             const filterButton = document.getElementById('filterButton');
@@ -548,46 +647,19 @@
 
             // Referências para os elementos do story da Maria
             const mariaStoryCircle = document.getElementById('mariaStoryCircle');
-            // AQUI ESTÁ A MUDANÇA: PEGAR A IMAGEM DA MARIA DIRETAMENTE
-            const mariaStoryImageElement = document.getElementById('mariaStoryImage'); 
-            const mariaAddButton = document.getElementById('mariaAddButton'); 
+            const mariaAddButton = document.getElementById('mariaAddButton');
             const mariaStoryOverlay = document.getElementById('mariaStoryOverlay');
             const closeMariaStoryButton = document.getElementById('closeMariaStoryButton');
-            const mariaStoryVideo = document.getElementById('mariaStoryVideo'); 
-            let mariaTouchStartY = 0; 
-
-            // Referências para os elementos do story do Ciclano (inalterados para esta solicitação)
-            const ciclanoStoryCircle = document.getElementById('ciclanoStoryCircle');
-            const ciclanoStoryOverlay = document.getElementById('ciclanoStoryOverlay');
-            const ciclanoStories = ['img/storyciclano1.png', 'img/storyciclano2.png'];
-            let currentCiclanoStoryIndex = 0;
-            let ciclanoTouchStartY = 0;
-            const closeCiclanoStoryButtonTop = document.getElementById('closeCiclanoStoryButtonTop'); 
-            // O spotifyRedirectButton não é mais necessário porque o iframe já está lá.
-
-            // Referências para os stories do Amigo A e B (inalterados para esta solicitação)
-            const amigoAStoryCircle = document.getElementById('amigoAStoryCircle');
-            const amigoAStoryOverlay = document.getElementById('amigoAStoryOverlay');
-            const amigoAStories = ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+2'];
-            let currentAmigoAStoryIndex = 0;
-            let amigoATouchStartY = 0;
-            const closeAmigoAStoryButtonTop = document.getElementById('closeAmigoAStoryButtonTop'); 
-
-            const amigoBStoryCircle = document.getElementById('amigoBStoryCircle');
-            const amigoBStoryOverlay = document.getElementById('amigoBStoryOverlay');
-            const amigoBStories = ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+2'];
-            let currentAmigoBStoryIndex = 0;
-            let amigoBTouchStartY = 0;
-            const closeAmigoBStoryButtonTop = document.getElementById('closeAmigoBStoryButtonTop'); 
-
-            // Referências para a tela de Criar Post (inalterados para esta solicitação)
+            const mariaStoryVideo = document.getElementById('mariaStoryVideo');
+            
+            // Referências para a tela de Criar Post
             const createPostFab = document.getElementById('createPostFab');
             const createPostOverlay = document.getElementById('createPostOverlay');
             const closeCreatePostButton = document.getElementById('closeCreatePostButton');
-            const publishPostButton = document.getElementById('publishPostButton'); 
+            const publishPostButton = document.getElementById('publishPostButton');
             const postContentInput = document.getElementById('postContentInput');
 
-            // Referências para os botões de anexar mídia (inalterados para esta solicitação)
+            // Referências para os botões de anexar mídia
             const attachImageButton = document.getElementById('attachImageButton');
             const attachFileButton = document.getElementById('attachFileButton');
             const imageFileInput = document.getElementById('imageFileInput');
@@ -598,35 +670,71 @@
             let attachedFileType = null;
             let attachedFileSrc = null;
 
-            // Referência para o título da timeline (inalterados para esta solicitação)
+            // Referência para o título da timeline
             const timelineTitle = document.getElementById('timelineTitle');
             const mainHeader = document.getElementById('mainHeader');
 
-            // Overlay de Feedback de Amigo (inalterados para esta solicitação)
+            // Overlay de Feedback de Amigo
             const friendFeedbackOverlay = document.getElementById('friendFeedbackOverlay');
             const feedbackMessage = document.getElementById('feedbackMessage');
             const feedbackOkButton = document.getElementById('feedbackOkButton');
 
-            // --- Funções Comuns (ajustadas para parar a câmera da Maria) ---
+            // Custom Message Box
+            const messageBox = document.getElementById('messageBox');
+            const messageText = document.getElementById('messageText');
+            const messageOkButton = document.getElementById('messageOkButton');
 
-            function toggleFilterMenu() { 
+            // --- Funções Comuns ---
+
+            // Função para mostrar uma mensagem personalizada (substitui alert)
+            function showMessage(message) {
+                messageText.textContent = message;
+                messageBox.classList.remove('hidden');
+                messageBox.classList.add('flex'); // Usa flex para centralizar
+                messageBox.style.display = 'flex'; // Garante que esteja visível
+            }
+
+            // Listener para o botão OK da mensagem personalizada
+            if (messageOkButton) {
+                messageOkButton.addEventListener('click', () => {
+                    messageBox.classList.add('hidden');
+                    messageBox.classList.remove('flex');
+                    messageBox.style.display = 'none'; // Esconde a caixa de mensagem
+                });
+            }
+
+            function toggleFilterMenu() {
                 filterMenu.classList.toggle('hidden');
                 overlay.style.display = filterMenu.classList.contains('hidden') ? 'none' : 'block';
             }
             
+            function stopMariaStoryCamera() {
+                if (mariaStoryLocalStream) {
+                    mariaStoryLocalStream.getTracks().forEach(track => track.stop()); // Para todas as trilhas (vídeo)
+                    mariaStoryLocalStream = null;
+                    mariaStoryVideo.srcObject = null;
+                }
+            }
+
             function closeAllOverlays() {
-                if (mariaStoryOverlay && !mariaStoryOverlay.classList.contains('hidden')) { // Verifica se o story da Maria está visível
+                if (activeStoryKey === 'maria') {
                     stopMariaStoryCamera(); // Para a câmera ao fechar o story da Maria
                 }
-                if (mariaStoryOverlay) mariaStoryOverlay.classList.add('hidden');
-                if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.add('hidden');
-                if (amigoAStoryOverlay) amigoAStoryOverlay.classList.add('hidden');
-                if (amigoBStoryOverlay) amigoBStoryOverlay.classList.add('hidden');
+                for (const key in storyData) {
+                    const story = storyData[key];
+                    const overlayElement = document.getElementById(story.overlayId);
+                    if (overlayElement) {
+                        overlayElement.classList.add('hidden');
+                    }
+                    // Esconde menus de reação
+                    if (story.reactionMenuId) {
+                        const reactionMenu = document.getElementById(story.reactionMenuId);
+                        if (reactionMenu) reactionMenu.classList.add('hidden');
+                    }
+                }
                 if (createPostOverlay) createPostOverlay.classList.add('hidden');
                 if (friendFeedbackOverlay) friendFeedbackOverlay.style.display = 'none';
-                if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
-                if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
-                if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
+                activeStoryKey = null; // Reseta o story ativo
             }
 
             function setupSwipeToClose(overlayElement, touchStartYVarName) {
@@ -643,7 +751,53 @@
                 });
             }
 
-            // --- Lógica do Filtro (inalterada) ---
+            // Função genérica para abrir um story
+            function openStory(storyKey) {
+                closeAllOverlays();
+                const story = storyData[storyKey];
+                activeStoryKey = storyKey;
+
+                if (story.type === 'camera') {
+                    startMariaStoryCamera();
+                } else {
+                    document.getElementById(story.overlayId).classList.remove('hidden');
+                    story.currentIndex = 0; // Sempre começa do primeiro story ao abrir
+                    document.getElementById(story.imageElementId).src = story.stories[story.currentIndex];
+                }
+            }
+
+            // Função genérica para navegar entre os stories de uma pessoa ou para a próxima/anterior
+            function navigateStory(storyKey, direction) {
+                const story = storyData[storyKey];
+                if (story.type === 'camera') return; // Stories de câmera não navegam assim
+
+                story.currentIndex += direction;
+
+                if (story.currentIndex >= story.stories.length) {
+                    // Se chegou ao final dos stories da pessoa atual, tenta ir para a próxima pessoa
+                    if (story.nextStoryPerson) {
+                        openStory(story.nextStoryPerson);
+                    } else {
+                        closeAllOverlays(); // Se não há próxima pessoa, fecha
+                    }
+                } else if (story.currentIndex < 0) {
+                    // Se voltou do início dos stories da pessoa atual, tenta ir para a pessoa anterior
+                    if (story.prevStoryPerson) {
+                        const prevStory = storyData[story.prevStoryPerson];
+                        openStory(story.prevStoryPerson);
+                        // Define o índice para a última imagem da pessoa anterior
+                        prevStory.currentIndex = prevStory.stories.length - 1;
+                        document.getElementById(prevStory.imageElementId).src = prevStory.stories[prevStory.currentIndex];
+                    } else {
+                        closeAllOverlays(); // Se não há pessoa anterior, fecha
+                    }
+                } else {
+                    // Navega para o próximo/anterior story da pessoa atual
+                    document.getElementById(story.imageElementId).src = story.stories[story.currentIndex];
+                }
+            }
+
+            // --- Lógica do Filtro ---
             if (filterButton) {
                 filterButton.addEventListener('click', toggleFilterMenu);
             }
@@ -685,12 +839,12 @@
                     }
                 });
                 
-                // Atualiza o título da timeline baseado nos filtros
+                // Atualiza o título da timeline baseado nos filtros (AGORA COMO NO ANTIGO!)
                 if (showOnlyJobs) {
-                    timelineTitle.textContent = "Vagas de Emprego";
+                    timelineTitle.textContent = "Vagas"; // Mudado de "Vagas de Emprego" para "Vagas"
                     mainHeader.style.backgroundColor = '#ff7a28'; // Cor laranja para vagas
                 } else if (selectedCampus !== 'todos') {
-                    timelineTitle.textContent = `Timeline - ${selectedCampus.toUpperCase()}`;
+                    timelineTitle.textContent = selectedCampus.toUpperCase(); // Mudado de "Timeline - ${selectedCampus.toUpperCase()}" para apenas o campus
                     mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
                 } else {
                     timelineTitle.textContent = "Timeline";
@@ -705,7 +859,7 @@
                 jobFilterSwitch.addEventListener('change', applyFilters);
             }
 
-            // --- Lógica das Estrelas de Avaliação (inalterada) ---
+            // --- Lógica das Estrelas de Avaliação ---
             const starRatings = document.querySelectorAll('.star-rating');
             starRatings.forEach(ratingContainer => {
                 const stars = ratingContainer.querySelectorAll('img');
@@ -726,7 +880,7 @@
                 });
             });
 
-            // --- Lógica dos botões de Curtir (inalterada) ---
+            // --- Lógica dos botões de Curtir ---
             document.querySelectorAll('.like-icon').forEach(button => {
                 button.addEventListener('click', function() {
                     const likeCountSpan = this.nextElementSibling;
@@ -746,7 +900,7 @@
                 });
             });
 
-            // --- Lógica do Botão de Adicionar Amigo (inalterada) ---
+            // --- Lógica do Botão de Adicionar Amigo ---
             document.querySelectorAll('.add-friend-icon').forEach(button => {
                 button.addEventListener('click', function() {
                     const username = this.dataset.username;
@@ -761,325 +915,133 @@
                 });
             }
 
-            // --- Lógica da Câmera no Story da Maria (CORRIGIDA!) ---
+            // --- Lógica da Câmera no Story da Maria ---
             async function startMariaStoryCamera() {
                 try {
-                    // Pede acesso à câmera (sem áudio para o story)
                     mariaStoryLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
                     mariaStoryVideo.srcObject = mariaStoryLocalStream; // Conecta o stream ao elemento <video>
                     mariaStoryOverlay.classList.remove('hidden'); // Mostra a overlay do story
                     mariaStoryVideo.classList.remove('hidden'); // Garante que o vídeo esteja visível
                 } catch (error) {
                     console.error('Erro ao acessar a câmera para o story da Maria:', error);
-                    alert('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
-                    // Se não conseguir a câmera, esconde o vídeo e mostra a imagem estática ou um fallback
+                    showMessage('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
                     mariaStoryVideo.classList.add('hidden'); // Esconde o elemento de vídeo
-                    // Podemos manter o overlay visível, talvez mostrando um placeholder ou mensagem
-                    mariaStoryOverlay.classList.remove('hidden'); 
-                    // Por simplicidade, apenas escondi o vídeo. Se quiser um fallback visual aqui, me avisa.
+                    mariaStoryOverlay.classList.remove('hidden'); // Mantém o overlay visível para o botão de fechar
                 }
             }
 
-            function stopMariaStoryCamera() {
-                if (mariaStoryLocalStream) {
-                    mariaStoryLocalStream.getTracks().forEach(track => track.stop()); // Para todas as trilhas (vídeo)
-                    mariaStoryLocalStream = null;
-                    mariaStoryVideo.srcObject = null;
-                }
-            }
-
-            // O `mariaStoryImageElement` é a imagem `maria.png` no feed.
-            // Clicar nela OU no `mariaAddButton` (o + na borda) deve iniciar o story com a câmera.
-            if (mariaStoryImageElement) { // Garante que o elemento existe
-                mariaStoryImageElement.addEventListener('click', function(event) {
-                    event.stopPropagation(); // Importante para não disparar eventos de elementos pais
-                    closeAllOverlays(); // Fecha outros overlays antes de abrir o story
-                    startMariaStoryCamera(); // Inicia a câmera para o story da Maria
+            // O `mariaStoryCircle` e `mariaAddButton` devem iniciar o story com a câmera.
+            if (mariaStoryCircle) {
+                mariaStoryCircle.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    openStory('maria');
                 });
             }
 
             if (mariaAddButton) {
                 mariaAddButton.addEventListener('click', function(event) {
-                    event.stopPropagation(); // Evita que o clique se propague
-                    closeAllOverlays();
-                    startMariaStoryCamera();
+                    event.stopPropagation();
+                    openStory('maria');
                 });
             }
 
             if (closeMariaStoryButton) {
-                closeMariaStoryButton.addEventListener('click', function() {
-                    closeAllOverlays(); // Esta função já cuida de parar a câmera agora
-                });
+                closeMariaStoryButton.addEventListener('click', closeAllOverlays);
             }
             if (mariaStoryOverlay) {
                 setupSwipeToClose(mariaStoryOverlay, 'mariaTouchStartY');
             }
 
+            // --- Lógica para todos os Stories (Ciclano, Amigo A, Amigo B) ---
+            for (const key in storyData) {
+                const story = storyData[key];
 
-            // --- Lógica do Story do Ciclano (inalterada, exceto pelo Spotify) ---
-            const ciclanoStoryImage = document.getElementById('ciclanoStoryImage');
+                // Pula a Maria, pois ela tem lógica de câmera diferente
+                if (story.type === 'camera') continue;
 
-            function showCiclanoStory(index) {
-                if (ciclanoStoryImage && ciclanoStories.length > 0) { // Check before accessing array
-                    if (index >= 0 && index < ciclanoStories.length) {
-                        currentCiclanoStoryIndex = index;
-                        ciclanoStoryImage.src = ciclanoStories[currentCiclanoStoryIndex];
-                        ciclanoStoryImage.onerror = function() {
-                            this.onerror = null;
-                            this.src = 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+CICLANO+ERRO';
-                        };
-                    } else if (index >= ciclanoStories.length) {
-                        closeAllOverlays();
-                        // openAmigoAStory(); // Comentado para evitar navegação automática entre stories
-                    } else if (index < 0) {
-                        closeAllOverlays();
-                    }
+                // Clique no círculo para abrir o story
+                const circle = document.getElementById(story.circleId);
+                if (circle) {
+                    circle.addEventListener('click', () => openStory(key));
+                }
+
+                // Botão de fechar o story
+                const closeButton = document.getElementById(story.closeButtonId);
+                if (closeButton) {
+                    closeButton.addEventListener('click', closeAllOverlays);
+                }
+
+                // Swipe para fechar o story
+                const overlayElement = document.getElementById(story.overlayId);
+                if (overlayElement) {
+                    setupSwipeToClose(overlayElement, story.touchStartYVar);
+                }
+
+                // Áreas de clique para navegação (esquerda/direita)
+                const leftClick = document.getElementById(story.leftClickAreaId);
+                const rightClick = document.getElementById(story.rightClickAreaId);
+
+                if (leftClick) {
+                    leftClick.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        navigateStory(key, -1);
+                    });
+                }
+                if (rightClick) {
+                    rightClick.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        navigateStory(key, 1);
+                    });
+                }
+
+                // Lógica do botão de reação
+                const reactionButton = document.getElementById(story.reactionButtonId);
+                const reactionMenu = document.getElementById(story.reactionMenuId);
+                const reactionHeart = document.getElementById(story.reactionHeartId);
+                const reactionStars = document.getElementById(story.reactionStarsId);
+                const storyInput = document.getElementById(story.circleId.replace('Circle', 'Input')); // Ex: ciclanoStoryInput
+                const storySendButton = document.getElementById(story.circleId.replace('Circle', 'SendButton')); // Ex: ciclanoStorySendButton
+
+                if (reactionButton) {
+                    reactionButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (reactionMenu) reactionMenu.classList.toggle('hidden');
+                    });
+                }
+                if (reactionHeart) {
+                    reactionHeart.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        console.log(`Reação ${key}: Coração`);
+                        if (reactionMenu) reactionMenu.classList.add('hidden');
+                    });
+                }
+                if (reactionStars) {
+                    reactionStars.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        console.log(`Reação ${key}: Estrelas`);
+                        if (reactionMenu) reactionMenu.classList.add('hidden');
+                    });
+                }
+                // Esconde o menu de reação ao clicar fora dele
+                if (overlayElement && reactionButton && reactionMenu) {
+                    overlayElement.addEventListener('click', (e) => {
+                        if (!reactionButton.contains(e.target) && !reactionMenu.contains(e.target) && !reactionMenu.classList.contains('hidden')) {
+                            reactionMenu.classList.add('hidden');
+                        }
+                    });
+                }
+
+                // Lógica de envio de mensagem no story
+                if (storyInput && storySendButton) {
+                    storySendButton.addEventListener('click', function() {
+                        if (storyInput.value.trim() !== '') {
+                            console.log(`Mensagem ${key}: ${storyInput.value}`);
+                            storyInput.value = '';
+                        }
+                    });
                 }
             }
 
-            function openCiclanoStory() {
-                closeAllOverlays();
-                if (ciclanoStoryOverlay) ciclanoStoryOverlay.classList.remove('hidden');
-                currentCiclanoStoryIndex = 0;
-                showCiclanoStory(currentCiclanoStoryIndex);
-                // Referências para elementos que não existem mais (removidos pelo iframe do Spotify)
-                // if (ciclanoStoryInput) ciclanoStoryInput.value = '';
-                // if (ciclanoReactionMenu) ciclanoReactionMenu.classList.add('hidden');
-            }
-
-            if (ciclanoStoryCircle) {
-                ciclanoStoryCircle.addEventListener('click', openCiclanoStory);
-            }
-
-            // Removi os event listeners para ciclanoStoryLeftClick e ciclanoStoryRightClick
-            // já que a intenção era o iframe, e não ter swipe no post com Spotify.
-            // Se precisar de swipe dentro do overlay do Story do Ciclano (imagem), avisa!
-
-            if (ciclanoStoryOverlay) {
-                setupSwipeToClose(ciclanoStoryOverlay, 'ciclanoTouchStartY');
-            }
-            // Se os inputs e botões de reação não são para os stories estáticos, pode ignorar essas linhas.
-            // if (ciclanoStoryInput && ciclanoStorySendButton) { /* ... */ }
-            // if (ciclanoReactionButton) { /* ... */ }
-            // if (ciclanoReactionHeart) { /* ... */ }
-            // if (ciclanoReactionStars) { /* ... */ }
-            // if (ciclanoStoryOverlay) { /* ... */ }
-            if (closeCiclanoStoryButtonTop) {
-                closeCiclanoStoryButtonTop.addEventListener('click', closeAllOverlays);
-            }
-
-
-            // --- Lógica do Story do Amigo A ---
-            const amigoAStoryImage = document.getElementById('amigoAStoryImage');
-            function showAmigoAStory(index = 0) {
-                closeAllOverlays();
-                if (amigoAStoryOverlay) amigoAStoryOverlay.classList.remove('hidden');
-                currentAmigoAStoryIndex = index;
-                // Assegura que amigoAStoryImage e amigoAStories.length > 0 existam antes de acessar
-                if (amigoAStoryImage && amigoAStories.length > 0) { 
-                    amigoAStoryImage.src = amigoAStories[currentAmigoAStoryIndex];
-                    amigoAStoryImage.onerror = function() {
-                        this.onerror = null;
-                        this.src = 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+ERRO';
-                    };
-                }
-                // Limpeza de inputs e menus de reação se existirem
-                if (document.getElementById('amigoAStoryInput')) document.getElementById('amigoAStoryInput').value = '';
-                if (document.getElementById('amigoAReactionMenu')) document.getElementById('amigoAReactionMenu').classList.add('hidden');
-            }
-
-            function openAmigoAStory() {
-                closeAllOverlays();
-                if (amigoAStoryOverlay) amigoAStoryOverlay.classList.remove('hidden');
-                currentAmigoAStoryIndex = 0;
-                showAmigoAStory(currentAmigoAStoryIndex);
-            }
-
-            if (amigoAStoryCircle) {
-                amigoAStoryCircle.addEventListener('click', openAmigoAStory);
-            }
-            
-            if (amigoAStoryOverlay) {
-                setupSwipeToClose(amigoAStoryOverlay, 'amigoATouchStartY');
-            }
-            // AQUI: Lógica de navegação entre stories (clique na metade esquerda/direita)
-            // Certifique-se de que os elementos existam antes de adicionar listeners
-            const amigoAStoryLeftClick = document.getElementById('amigoAStoryLeftClick');
-            const amigoAStoryRightClick = document.getElementById('amigoAStoryRightClick');
-
-            if (amigoAStoryLeftClick) {
-                amigoAStoryLeftClick.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (currentAmigoAStoryIndex > 0) {
-                        showAmigoAStory(currentAmigoAStoryIndex - 1);
-                    } else {
-                        closeAllOverlays();
-                        // openCiclanoStory(ciclanoStories.length - 1); // Pode precisar ajustar a lógica de "story anterior"
-                    }
-                });
-            }
-            if (amigoAStoryRightClick) {
-                amigoAStoryRightClick.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (currentAmigoAStoryIndex < amigoAStories.length - 1) {
-                        showAmigoAStory(currentAmigoAStoryIndex + 1);
-                    } else {
-                        closeAllOverlays();
-                        openAmigoBStory();
-                    }
-                });
-            }
-            // Lógica para input/botões de reação nos stories
-            const amigoAStoryInput = document.getElementById('amigoAStoryInput');
-            const amigoAStorySendButton = document.getElementById('amigoAStorySendButton');
-            const amigoAReactionButton = document.getElementById('amigoAReactionButton');
-            const amigoAReactionMenu = document.getElementById('amigoAReactionMenu');
-            const amigoAReactionHeart = document.getElementById('amigoAReactionHeart');
-            const amigoAReactionStars = document.getElementById('amigoAReactionStars');
-
-            if (amigoAStoryInput && amigoAStorySendButton) {
-                amigoAStorySendButton.addEventListener('click', function() {
-                    if (amigoAStoryInput.value.trim() !== '') {
-                        console.log("Mensagem Amigo A: " + amigoAStoryInput.value);
-                        amigoAStoryInput.value = '';
-                    }
-                });
-            }
-            if (amigoAReactionButton) {
-                amigoAReactionButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (amigoAReactionMenu) amigoAReactionMenu.classList.toggle('hidden');
-                });
-            }
-            if (amigoAReactionHeart) {
-                amigoAReactionHeart.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    console.log('Reação Amigo A: Coração');
-                    if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
-                });
-            }
-            if (amigoAReactionStars) {
-                amigoAReactionStars.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    console.log('Reação Amigo A: Estrelas');
-                    if (amigoAReactionMenu) amigoAReactionMenu.classList.add('hidden');
-                });
-            }
-            if (amigoAStoryOverlay) {
-                amigoAStoryOverlay.addEventListener('click', function(event) {
-                    if (amigoAReactionButton && amigoAReactionMenu && !amigoAReactionButton.contains(event.target) && !amigoAReactionMenu.contains(event.target) && !amigoAReactionMenu.classList.contains('hidden')) {
-                        amigoAReactionMenu.classList.add('hidden');
-                    }
-                });
-            }
-            if (closeAmigoAStoryButtonTop) {
-                closeAmigoAStoryButtonTop.addEventListener('click', closeAllOverlays);
-            }
-
-
-            // --- Lógica do Story do Amigo B ---
-            const amigoBStoryImage = document.getElementById('amigoBStoryImage');
-            function showAmigoBStory(index = 0) {
-                closeAllOverlays();
-                if (amigoBStoryOverlay) amigoBStoryOverlay.classList.remove('hidden');
-                currentAmigoBStoryIndex = index;
-                // Assegura que amigoBStoryImage e amigoBStories.length > 0 existam antes de acessar
-                if (amigoBStoryImage && amigoBStories.length > 0) { 
-                    amigoBStoryImage.src = amigoBStories[currentAmigoBStoryIndex];
-                    amigoBStoryImage.onerror = function() {
-                        this.onerror = null;
-                        this.src = 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+ERRO';
-                    };
-                }
-                // Limpeza de inputs e menus de reação se existirem
-                if (document.getElementById('amigoBStoryInput')) document.getElementById('amigoBStoryInput').value = '';
-                if (document.getElementById('amigoBReactionMenu')) document.getElementById('amigoBReactionMenu').classList.add('hidden');
-            }
-
-            function openAmigoBStory() {
-                closeAllOverlays();
-                if (amigoBStoryOverlay) amigoBStoryOverlay.classList.remove('hidden');
-                currentAmigoBStoryIndex = 0;
-                showAmigoBStory(currentAmigoBStoryIndex);
-            }
-
-            if (amigoBStoryCircle) {
-                amigoBStoryCircle.addEventListener('click', openAmigoBStory);
-            }
-            if (amigoBStoryOverlay) {
-                setupSwipeToClose(amigoBStoryOverlay, 'amigoBTouchStartY');
-            }
-            // AQUI: Lógica de navegação entre stories (clique na metade esquerda/direita)
-            // Certifique-se de que os elementos existam antes de adicionar listeners
-            const amigoBStoryLeftClick = document.getElementById('amigoBStoryLeftClick');
-            const amigoBStoryRightClick = document.getElementById('amigoBStoryRightClick');
-            
-            if (amigoBStoryLeftClick) {
-                amigoBStoryLeftClick.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (currentAmigoBStoryIndex > 0) {
-                        showAmigoBStory(currentAmigoBStoryIndex - 1);
-                    } else {
-                        closeAllOverlays();
-                        openAmigoAStory(amigoAStories.length - 1); // Pode precisar ajustar a lógica de "story anterior"
-                    }
-                });
-            }
-            if (amigoBStoryRightClick) {
-                amigoBStoryRightClick.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (currentAmigoBStoryIndex < amigoBStories.length - 1) {
-                        showAmigoBStory(currentAmigoBStoryIndex + 1);
-                    } else {
-                        closeAllOverlays();
-                    }
-                });
-            }
-            // Lógica para input/botões de reação nos stories
-            const amigoBStorySendButton = document.getElementById('amigoBStorySendButton');
-            const amigoBReactionButton = document.getElementById('amigoBReactionButton');
-            const amigoBReactionMenu = document.getElementById('amigoBReactionMenu');
-            const amigoBReactionHeart = document.getElementById('amigoBReactionHeart');
-            const amigoBReactionStars = document.getElementById('amigoBReactionStars');
-
-            if (amigoBStorySendButton) {
-                amigoBStorySendButton.addEventListener('click', function() {
-                    if (document.getElementById('amigoBStoryInput').value.trim() !== '') {
-                        console.log("Mensagem Amigo B: " + document.getElementById('amigoBStoryInput').value);
-                        document.getElementById('amigoBStoryInput').value = '';
-                    }
-                });
-            }
-            if (amigoBReactionButton) {
-                amigoBReactionButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    if (amigoBReactionMenu) amigoBReactionMenu.classList.toggle('hidden');
-                });
-            }
-            if (amigoBReactionHeart) {
-                amigoBReactionHeart.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    console.log('Reação Amigo B: Coração');
-                    if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
-                });
-            }
-            if (amigoBReactionStars) {
-                amigoBReactionStars.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    console.log('Reação Amigo B: Estrelas');
-                    if (amigoBReactionMenu) amigoBReactionMenu.classList.add('hidden');
-                });
-            }
-            if (amigoBStoryOverlay) {
-                amigoBStoryOverlay.addEventListener('click', function(event) {
-                    if (amigoBReactionButton && amigoBReactionMenu && !amigoBReactionButton.contains(event.target) && !amigoBReactionMenu.contains(event.target) && !amigoBReactionMenu.classList.contains('hidden')) {
-                        amigoBReactionMenu.classList.add('hidden');
-                    }
-                });
-            }
-            if (closeAmigoBStoryButtonTop) {
-                closeAmigoBStoryButtonTop.addEventListener('click', closeAllOverlays);
-            }
 
             // --- Lógica da Tela de Criar Post ---
             if (createPostFab) {
@@ -1160,18 +1122,17 @@
                 });
             }
 
-
             // --- Publicar Novo Post no Feed ---
             if (publishPostButton) {
                 publishPostButton.addEventListener('click', function() {
                     const postContent = postContentInput.value.trim();
 
                     if (postContent === '' && !attachedFileType) {
-                        alert('Bicha, escreva algo ou anexe uma mídia para publicar um post!');
+                        showMessage('Bicha, escreva algo ou anexe uma mídia para publicar um post!');
                         return;
                     }
 
-                    const mainContainer = document.getElementById('main'); 
+                    const mainContainer = document.getElementById('main');
                     
                     const newTweetCard = document.createElement('div');
                     newTweetCard.classList.add('tweet-card', 'w-[383px]', 'border-b-2', 'border-black', 'flex', 'flex-col', 'justify-between', 'pt-2', 'pb-2', 'mx-auto', 'relative');
@@ -1203,7 +1164,7 @@
                             </div>
                         </div>
                     `;
-                    mainContainer.insertBefore(newTweetCard, mainContainer.children[2]); 
+                    mainContainer.insertBefore(newTweetCard, mainContainer.children[2]);
                     
                     postContentInput.value = '';
                     attachedMediaPreview.classList.add('hidden');
@@ -1215,10 +1176,9 @@
                     attachedFileSrc = null;
                     if (createPostOverlay) createPostOverlay.classList.add('hidden');
 
+                    // Re-adiciona event listeners para os novos botões de curtir
                     document.querySelectorAll('.like-icon').forEach(button => {
-                        const newButton = button.cloneNode(true);
-                        button.parentNode.replaceChild(newButton, button);
-                        newButton.addEventListener('click', function() {
+                        button.addEventListener('click', function() {
                             const likeCountSpan = this.nextElementSibling;
                             let currentLikes = parseInt(likeCountSpan.textContent);
                             const hasLiked = likeCountSpan.dataset.liked === 'true';

@@ -1,1207 +1,2407 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Unilink</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* A família Nunito, porque a gente ama consistência e um visual clean! */
-        body {
-            font-family: "Nunito", sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0; /* Um fundinho neutro pra não brigar com o cabeçalho */
-            display: flex; /* Para centralizar o contêiner principal */
-            justify-content: center; /* Centra horizontalmente o contêiner principal */
-            align-items: center; /* Centra verticalmente o contêiner principal */
-            min-height: 100vh; /* Garante que o corpo ocupa toda a altura da tela */
-        }
 
-        /* Classes para os botões e inputs menores, com bordas arredondadas como a gente gosta */
-        .rounded-14px {
-            border-radius: 14px;
-        }
-        
-        /* Estilo para a sobreposição escura do filtro */
-        .overlay {
-            position: fixed; /* Fixo na viewport */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Escurece 50% */
-            z-index: 20; /* Fica acima do conteúdo, mas abaixo do filtro */
-            display: none; /* Escondido por padrão */
-        }
+    <meta charset="UTF-8">
 
-        /* Estilo para a sobreposição de qualquer Story (genérico) */
-        .story-overlay, .create-post-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); /* Fundo preto semi-transparente para o story */
-            display: flex; /* Alterado para flex para que a visibilidade seja controlada APENAS pela classe 'hidden' */
-            justify-content: center;
-            align-items: center;
-            z-index: 50; /* Z-index mais alto para ficar acima de tudo */
-            /* Removido 'display: none;' daqui - agora é controlado pela classe 'hidden' do Tailwind */
-        }
-        .create-post-overlay .content-wrapper {
-             /* Cor azul para o conteúdo principal da tela de criar post */
-             background-color: #026dad;
-             /* degrade suave */
-             background: #026dad;
-             width: 393px; /* Revertido para o tamanho anterior */
-             height: 852px;
-             border-radius: 28px; /* Ajuste se precisar de borda redonda */
-             display: flex;
-             flex-direction: column;
-             overflow: hidden; /* Garante que o conteúdo não vaze */
-             border: 4px solid black; /* Borda preta como no celular */
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        /* Estilo para o overlay de feedback de adição de amigo */
-        .feedback-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100; /* Super alto para aparecer por cima de tudo */
-            display: none;
-        }
-        .feedback-box {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    <title>Home - Unilink</title>
 
-        /* Estilo para a sobreposição da câmera no story da Maria */
-        .maria-story-video-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black; /* Fundo preto para o story de vídeo */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 50; /* Z-index mais alto que o normal, mas abaixo dos feedbacks */
-        }
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        .maria-story-video-overlay .content-wrapper {
-            width: 393px; /* Largura da tela do celular */
-            height: 852px; /* Altura da tela do celular */
-            border: 4px solid black; /* Borda preta */
-            border-radius: 16px; /* Cantos arredondados */
-            overflow: hidden;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            background-color: #f0f0f0;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 
-        .maria-story-video-overlay video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Garante que o vídeo preencha o espaço */
-            border-radius: 16px;
-        }
+    <style>
 
-        /* Área de clique para navegação em stories (metade esquerda/direita) */
-        .story-click-area {
-            position: absolute;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            cursor: pointer;
-            z-index: 1; /* Para estar acima da imagem, mas abaixo do botão de fechar */
-        }
-        .story-click-area.left { left: 0; z-index: 0; }
-        .story-click-area.right { right: 0; z-index: 0}
+        /* A família Nunito, porque a gente ama consistência e um visual clean! */
 
-        /* Estilo para as estrelas, para que fiquem clicáveis e na linha */
-        .star-rating img {
-            cursor: pointer;
-            display: inline-block; /* Garante que fiquem na mesma linha */
-        }
+        body {
 
-        #main::-webkit-scrollbar {
-            
-            display: none; /* Esconde a barra de rolagem visualmente */
-            width: 0; /* Garante que não ocupe espaço horizontal */
-            height: 0; /* Garante que não ocupe espaço vertical */
-        }
+            font-family: "Nunito", sans-serif;
 
-        /* Estilo para a caixa de mensagem personalizada */
-        .message-box {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* MUITO ALTO para aparecer por cima de tudo */
-        }
-    </style>
+            margin: 0;
+
+            padding: 0;
+
+            background-color: #f0f0f0; /* Um fundinho neutro pra não brigar com o cabeçalho */
+
+            display: flex; /* Para centralizar o contêiner principal */
+
+            justify-content: center; /* Centra horizontalmente o contêiner principal */
+
+            align-items: center; /* Centra verticalmente o contêiner principal */
+
+            min-height: 100vh; /* Garante que o corpo ocupa toda a altura da tela */
+
+        }
+
+
+
+        /* Classes para os botões e inputs menores, com bordas arredondadas como a gente gosta */
+
+        .rounded-14px {
+
+            border-radius: 14px;
+
+        }
+
+        
+
+        /* Estilo para a sobreposição escura do filtro */
+
+        .overlay {
+
+            position: fixed; /* Fixo na viewport */
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: rgba(0, 0, 0, 0.8); /* Escurece 50% */
+
+            z-index: 20; /* Fica acima do conteúdo, mas abaixo do filtro */
+
+            display: none; /* Escondido por padrão */
+
+        }
+
+
+
+        /* Estilo para a sobreposição de qualquer Story (genérico) */
+
+        .story-overlay, .create-post-overlay {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: rgba(0, 0, 0, 0.8); /* Fundo preto semi-transparente para o story */
+
+            display: flex; /* Alterado para flex para que a visibilidade seja controlada APENAS pela classe 'hidden' */
+
+            justify-content: center;
+
+            align-items: center;
+
+            z-index: 50; /* Z-index mais alto para ficar acima de tudo */
+
+            /* Removido 'display: none;' daqui - agora é controlado pela classe 'hidden' do Tailwind */
+
+        }
+
+        .create-post-overlay .content-wrapper {
+
+             /* Cor azul para o conteúdo principal da tela de criar post */
+
+             background-color: #026dad;
+
+             /* degrade suave */
+
+             background: #026dad;
+
+             width: 393px; /* Revertido para o tamanho anterior */
+
+             height: 852px;
+
+             border-radius: 28px; /* Ajuste se precisar de borda redonda */
+
+             display: flex;
+
+             flex-direction: column;
+
+             overflow: hidden; /* Garante que o conteúdo não vaze */
+
+             border: 4px solid black; /* Borda preta como no celular */
+
+        }
+
+
+
+        /* Estilo para o overlay de feedback de adição de amigo */
+
+        .feedback-overlay {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: rgba(0, 0, 0, 0.7);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            z-index: 100; /* Super alto para aparecer por cima de tudo */
+
+            display: none;
+
+        }
+
+        .feedback-box {
+
+            background-color: white;
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        }
+
+
+
+        /* Estilo para a sobreposição da câmera no story da Maria */
+
+        .maria-story-video-overlay {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: black; /* Fundo preto para o story de vídeo */
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            z-index: 50; /* Z-index mais alto que o normal, mas abaixo dos feedbacks */
+
+        }
+
+
+
+        .maria-story-video-overlay .content-wrapper {
+
+            width: 393px; /* Largura da tela do celular */
+
+            height: 852px; /* Altura da tela do celular */
+
+            border: 4px solid black; /* Borda preta */
+
+            border-radius: 16px; /* Cantos arredondados */
+
+            overflow: hidden;
+
+            position: relative;
+
+            display: flex;
+
+            flex-direction: column;
+
+            background-color: #f0f0f0;
+
+        }
+
+
+
+        .maria-story-video-overlay video {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover; /* Garante que o vídeo preencha o espaço */
+
+            border-radius: 16px;
+
+        }
+
+
+
+        /* Área de clique para navegação em stories (metade esquerda/direita) */
+
+        .story-click-area {
+
+            position: absolute;
+
+            top: 0;
+
+            width: 50%;
+
+            height: 100%;
+
+            cursor: pointer;
+
+            z-index: 1; /* Para estar acima da imagem, mas abaixo do botão de fechar */
+
+        }
+
+        .story-click-area.left { left: 0; z-index: 0; }
+
+        .story-click-area.right { right: 0; z-index: 0}
+
+
+
+        /* Estilo para as estrelas, para que fiquem clicáveis e na linha */
+
+        .star-rating img {
+
+            cursor: pointer;
+
+            display: inline-block; /* Garante que fiquem na mesma linha */
+
+        }
+
+
+
+        #main::-webkit-scrollbar {
+
+            
+
+            display: none; /* Esconde a barra de rolagem visualmente */
+
+            width: 0; /* Garante que não ocupe espaço horizontal */
+
+            height: 0; /* Garante que não ocupe espaço vertical */
+
+        }
+
+
+
+        /* Estilo para a caixa de mensagem personalizada */
+
+        .message-box {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            background-color: rgba(0, 0, 0, 0.7);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            z-index: 1000; /* MUITO ALTO para aparecer por cima de tudo */
+
+        }
+
+    </style>
+
 </head>
+
 <body>
-    <div class="w-[393px] h-[852px] border-4 border-black rounded-3xl
-                 flex flex-col bg-white shadow-xl overflow-hidden relative">
-        <header id="mainHeader" class="h-[75px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md transition-all duration-300">
-            <div class="h-full flex items-center">
-            <span class="text-white font-bold text-[25px]">unilink</span>
-            </div>
-
-            <div class="h-full flex items-center">
-                <a href="dm1.html">
-                    <img src="img/dm_icon.png" alt="Ícone de Mensagens Diretas" class=" w-[46px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/46x46/aaaaaa/FFFFFF?text=DM';"
-                        title="Mensagens Diretas">
-                </a>
-            </div>
-        </header>
-
-        <main class="flex-grow overflow-y-auto overflow-x-hidden relative z-0" id="main">
-            <div class="w-[179px] h-[29px] bg-[#ff6479] rounded-14px flex items-center justify-between px-2 relative mx-auto mt-4 mb-4">
-                <span id="timelineTitle" class="text-black font-bold text-[18px] text-left flex-grow flex-shrink-0 truncate">Timeline</span>
-                
-                <button id="filterButton" class="w-[43px] h-[22px] bg-[#ffb5a6] rounded-14px
-                                                 flex items-center justify-center shadow-md ml-auto flex-shrink-0">
-                    <img src="img/filtro_icon.png" alt="Ícone de Filtro" class="w-[15px] h-[15px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/15x15/ffb5a6/000000?text=F';"
-                        title="Filtro">
-                </button>
-            </div>
-
-            <div class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
-                <div id="mariaStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-black flex-shrink-0 flex items-center justify-center cursor-pointer">
-                    <img src="img/maria.png" alt="Story de Maria" id="mariaStoryImage" class="w-[53px] h-[53px] rounded-full object-cover"
-                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
-                    >
-                    <div id="mariaAddButton" class="absolute bottom-0 right-0 w-[20px] h-[20px] rounded-full bg-[#000080] border-[2px] border-white flex items-center justify-center -mb-1 -mr-1 cursor-pointer">
-                        <span class="text-white font-bold text-sm">+</span>
-                    </div>
-                </div>
-
-                <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
-                    <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
-                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
-                    >
-                </div>
-
-                <div id="amigoAStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
-                    <img src="https://placehold.co/53x53/cccccc/000000?text=A" alt="Story do Amigo A" class="w-[53px] h-[53px] rounded-full object-cover"
-                    >
-                </div>
-                <div id="amigoBStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
-                    <img src="https://placehold.co/53x53/cccccc/000000?text=B" alt="Story do Amigo B" class="w-[53px] h-[53px] rounded-full object-cover"
-                    >
-                </div>
-            </div>
-
-            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="ccet" data-type="tweet">
-                <div class="flex items-center px-2">
-                    <img src="img/fulano.png" alt="Foto de Perfil do Fulano" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
-                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=F';">
-                    <span class="font-bold text-[14px] text-gray-800">Fulano - CCET - Sistemas de Informação</span>
-                </div>
-                <p class="text-[14px] text-justify text-gray-700 px-2 mt-1 mb-1 leading-tight">
-                    gente, tô fazendo uma pesquisa pra IHC - Modelo de Usuário, podem responder se puderem? obrigado!
-                    <a href="#" class="text-[#004aad] underline">bit.ly/unilink_rio</a>
-                </p>
-                <div class="flex justify-between items-center px-2">
-                    <img data-username="Fulano" class="add-friend-icon w-[20px] h-[20px] object-contain cursor-pointer" src="img/adicionar.png" alt="Ícone de Adicionar" 
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
-                    <div class="flex items-center">
-                        <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
-                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
-                        <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">123</span>
-                    </div>
-                </div>
-            </div>
-
-           <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="cch" data-type="tweet">
-                <div class="flex items-center px-2">
-                    <img src="img/ciclano.png" alt="Foto de Perfil do Ciclano" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
-                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=C';">
-                    <span class="font-bold text-[14px] text-gray-800">Ciclano - CCH - Biblioteconomia</span>
-                </div>
-                <div class="w-[370px] mx-auto my-2 relative">
-                    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/3T6oYt7qK2Xg8Zq4J8Z02X?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-                </div>
-                
-                <div class="star-rating flex justify-between w-[360px] mx-auto mt-1 mb-1" data-rating="0">
-                    <img src="img/estrelaapagada.png" alt="Estrela 1" class="w-[25px] h-[25px]" data-value="1"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 2" class="w-[25px] h-[25px]" data-value="2"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 3" class="w-[25px] h-[25px]" data-value="3"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 4" class="w-[25px] h-[25px]" data-value="4"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 5" class="w-[25px] h-[25px]" data-value="5"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                </div>
-            </div>
-                
-                <div class="star-rating flex justify-between w-[360px] mx-auto mt-1 mb-1" data-rating="0">
-                    <img src="img/estrelaapagada.png" alt="Estrela 1" class="w-[25px] h-[25px]" data-value="1"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 2" class="w-[25px] h-[25px]" data-value="2"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 3" class="w-[25px] h-[25px]" data-value="3"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 4" class="w-[25px] h-[25px]" data-value="4"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                    <img src="img/estrelaapagada.png" alt="Estrela 5" class="w-[25px] h-[25px]" data-value="5"
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
-                </div>
-            </div>
-
-            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="cch" data-type="tweet">
-                <div class="flex items-center px-2">
-                    <img src="img/beltrana.png" alt="Foto de Perfil da Beltrana" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
-                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=B';">
-                    <span class="font-bold text-[14px] text-gray-800">Beltrana - CCH - História</span>
-                </div>
-                <div class="w-[370px] h-[52px] bg-gray-200 rounded-lg flex items-center px-2 mx-auto my-2 relative">
-                    <img src="img/folha.png" alt="Capa de Livro/Leitura" class="w-[40px] h-[40px] rounded object-cover mr-2"
-                        onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=L';"
-                    >
-                    <div class="flex flex-col justify-center flex-grow">
-                        <span class="font-bold text-[13px] text-gray-800">Lendo "Por flores e gramados"</span>
-                        <span class="text-[13px] text-gray-800 mt-0.5">Por Roberta Castro</span>
-                    </div>
-                </div>
-                
-                <div class="flex justify-between items-center px-2">
-                    <img data-username="Beltrana" class="add-friend-icon w-[20px] h-[20px] object-contain cursor-pointer" src="img/adicionar.png" alt="Ícone de Adicionar" 
-                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
-                    <div class="flex items-center">
-                        <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
-                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
-                        <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">123</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-type="job-opening">
-                <div class="flex items-center px-2">
-                    <div class="w-[44px] h-[44px] rounded-full bg-[#ff7a28] flex items-center justify-center mr-2">
-                        <img src="img/trabalho.png" alt="Ícone de Trabalho" class="w-[40px] h-[40px] object-contain"
-                            onerror="this.onerror=null;this.src='https://placehold.co/40x40/cccccc/000000?text=TRB';">
-                    </div>
-                    <span class="font-bold text-[14px] text-gray-800">Oportunidade de Emprego</span>
-                </div>
-                <p class="text-[14px] text-left text-gray-700 px-2 mt-1 mb-2 leading-tight">
-                    Vaga de Estágio como Instrutor de TI
-                </p>
-                <div class="flex justify-between items-center px-2 w-full">
-                    <a href="http://www.vagas.com/instrutor_ti" target="_blank" class="w-[300px] h-[22px] bg-[#b7cee8] text-blue-800 rounded-14px flex items-center justify-center text-[14px] font-bold no-underline mr-2">
-                        www.vagas.com/instrutor_ti
-                    </a>
-                    <div class="flex items-center flex-shrink-0">
-                        <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
-                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
-                        <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">123</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="w-[300px] h-[200px] bg-transparent mx-auto"></div>
-        </main>
-
-        <div id="overlay" class="overlay"></div>
-
-        <div id="filterMenu" class="absolute top-[88px] left-1/2 -translate-x-1/2
-                                     w-[350px] h-[120px] bg-[#ffb5a6] rounded-14px
-                                     shadow-lg p-3 z-30 hidden flex flex-col items-start justify-between">
-            <div class="flex items-center justify-between w-[calc(100%-20px)] mx-auto mt-2 mb-2">
-                <span class="text-black font-bold text-[20px] text-gray-800">Apenas vagas de emprego:</span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" class="sr-only peer" id="jobFilterSwitch">
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-between w-[calc(100%-20px)] mx-auto mt-2 mb-2">
-                <span id="campusLabel" class="text-black font-bold text-[20px]">Campus/Prédio:</span>
-                <select id="campusSelect" class="bg-[#e86b70] text-white rounded-md p-1 text-[18px] focus:outline-none">
-                    <option value="todos">Todos</option>
-                    <option value="cch">CCH</option>
-                    <option value="ccet">CCET</option>
-                    <option value="ccjp">CCJP</option>
-                    <option value="ib">IB</option>
-                </select>
-            </div>
-        </div>
-
-        <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between z-10">
-            <a href="home1.html" class="w-[78.6px] h-[60px] bg-[#657d4d] flex items-center justify-around">
-                <img src="img/home.png" alt="Ícone Home" class="w-[36px] h-[36px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
-            </a>
-            
-            <a href="usuarios.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
-                <img src="img/pesquisar.png" alt="Ícone Pesquisar" class="w-[36px] h-[36px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=P';">
-            </a>
-
-            <a href="jogaprolo.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
-                <img src="img/jogaprolo.png" alt="Ícone Jogaprolo" class="w-[36px] h-[36px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
-            </a>
-
-            <a href="agenda.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
-                <img src="img/agenda.png" alt="Ícone Agenda" class="w-[36px] h-[36px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
-            </a>
-
-            <a href="seuperfil.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
-                <img src="img/seuperfil.png" alt="Ícone Seu Perfil" class="w-[36px] h-[36px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=S';">
-            </a>
-        </footer>
-        
-        <button id="createPostFab" class="absolute bottom-[80px] right-[20px] w-[50px] h-[50px] rounded-full bg-[#026dad] border-[2px] border-black flex items-center justify-center text-white text-3xl font-bold shadow-lg z-40">
-            +
-        </button>
-
-    </div>
-
-    <!-- Sobreposição para o Story da Maria (com câmera) -->
-    <div id="mariaStoryOverlay" class="maria-story-video-overlay hidden">
-        <div class="content-wrapper">
-            <video id="mariaStoryVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
-            <button id="closeMariaStoryButton" class="absolute bottom-[20px] left-1/2 -translate-x-1/2 w-[148px] h-[33px] bg-[#002c5c] text-white font-bold text-[14px] rounded-14px flex items-center justify-center">
-                Voltar para home
-            </button>
-        </div>
-    </div>
-
-    <!-- Sobreposição para o Story do Ciclano -->
-    <div id="ciclanoStoryOverlay" class="story-overlay hidden">
-        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <button id="closeCiclanoStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
-                Voltar para home
-            </button>
-            <img id="ciclanoStoryImage" src="img/storyciclano1.png" 
-                alt="Story do Ciclano" 
-                class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+CICLANO+1';">
-            
-            <div class="story-click-area left" id="ciclanoStoryLeftClick"></div>
-            <div class="story-click-area right" id="ciclanoStoryRightClick"></div>
-            
-            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
-                <input type="text" id="ciclanoStoryInput" placeholder="Digite aqui"
-                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="ciclanoStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
-            </div>
-            <button id="ciclanoReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
-                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
-            </button>
-            <div id="ciclanoReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
-                <button id="ciclanoReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
-                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
-                </button>
-                <button id="ciclanoReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
-                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sobreposição para o Story do Amigo A -->
-    <div id="amigoAStoryOverlay" class="story-overlay hidden">
-        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <button id="closeAmigoAStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
-                Voltar para home
-            </button>
-            <img id="amigoAStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A" 
-                alt="Story do Amigo A" 
-                class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A';">
-            
-            <div class="story-click-area left" id="amigoAStoryLeftClick"></div>
-            <div class="story-click-area right" id="amigoAStoryRightClick"></div>
-            
-            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
-                <input type="text" id="amigoAStoryInput" placeholder="Digite aqui"
-                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="amigoAStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
-            </div>
-            <button id="amigoAReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
-                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
-            </button>
-            <div id="amigoAReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
-                <button id="amigoAReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
-                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
-                </button>
-                <button id="amigoAReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
-                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sobreposição para o Story do Amigo B -->
-    <div id="amigoBStoryOverlay" class="story-overlay hidden">
-        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
-            <button id="closeAmigoBStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
-                Voltar para home
-            </button>
-            <img id="amigoBStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B" 
-                alt="Story do Amigo B" 
-                class="w-full h-full border-4 border-black rounded-3xl object-cover"
-                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B';">
-            
-            <div class="story-click-area left" id="amigoBStoryLeftClick"></div>
-            <div class="story-click-area right" id="amigoBStoryRightClick"></div>
-            
-            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
-                <input type="text" id="amigoBStoryInput" placeholder="Digite aqui"
-                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button id="amigoBStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
-            </div>
-            <button id="amigoBReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
-                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
-                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
-            </button>
-            <div id="amigoBReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
-                <button id="amigoBReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
-                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
-                </button>
-                <button id="amigoBReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
-                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="createPostOverlay" class="create-post-overlay hidden ">
-        <div class="content-wrapper">
-            <header class="w-full h-[60px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md z-10">
-                <button id="closeCreatePostButton" class="text-white text-2xl font-bold">
-                    ← </button>
-                <div class="text-white font-bold text-[25px]">unilink</div>
-                <button id="publishPostButton" class="text-white font-bold text-[20px]">
-                    Publicar Post
-                </button>
-            </header>
-
-            <main class="flex-grow p-4 bg-[#FFFFFF] ">
-                <textarea id="postContentInput" placeholder="O que você está fazendo?"
-                                 class="w-full h-[150px] rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
-                
-                <div id="attachedMediaPreview" class="mt-4 hidden">
-                    <img id="previewImage" src="" alt="Pré-visualização da imagem" class="max-w-full max-h-48 object-contain rounded-md mx-auto hidden">
-                    <p id="previewFileName" class="text-gray-700 text-center mt-2 hidden"></p>
-                </div>
-            </main>
-
-            <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between top-2 px-1 z-10">
-                <div class="flex flex-col items-center cursor-pointer" id="attachImageButton">
-                    <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
-                    <span class="text-black text-[18px]">Imagem</span>
-                    <input type="file" id="imageFileInput" accept="image/*" class="hidden">
-                </div>
-                <div class="flex flex-col items-center cursor-pointer" id="attachBookButton">
-                    <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
-                    <span class="text-black text-[18px]">Livro</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer" id="attachMusicButton">
-                    <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
-                    <span class="text-black text-[18px]">Música</span>
-                </div>
-                <div class="flex flex-col items-center cursor-pointer" id="attachFileButton">
-                    <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain"
-                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
-                    <span class="text-black text-[18px]">Arquivo</span>
-                    <input type="file" id="fileAttachmentInput" class="hidden">
-                </div>
-            </footer>
-        </div>
-    </div>
-
-    <div id="friendFeedbackOverlay" class="feedback-overlay hidden">
-        <div class="feedback-box">
-            <p id="feedbackMessage" class="text-lg font-semibold mb-4"></p>
-            <button id="feedbackOkButton" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Ok!</button>
-        </div>
-    </div>
-
-    <!-- Custom Message Box (replaces alert) -->
-    <div id="messageBox" class="message-box hidden">
-        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
-            <p id="messageText" class="text-lg font-semibold mb-4"></p>
-            <button id="messageOkButton" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Ok!</button>
-        </div>
-    </div>
-
-    <script>
-        let mariaStoryLocalStream; // Variável para o stream da webcam do story da Maria
-
-        // Objeto para gerenciar os dados de todos os stories de forma centralizada
-        const storyData = {
-            maria: {
-                circleId: 'mariaStoryCircle',
-                overlayId: 'mariaStoryOverlay',
-                videoElementId: 'mariaStoryVideo', // Para o stream da câmera
-                closeButtonId: 'closeMariaStoryButton',
-                touchStartYVar: 'mariaTouchStartY',
-                type: 'camera' // Tipo especial para story de câmera
-            },
-            ciclano: {
-                circleId: 'ciclanoStoryCircle',
-                overlayId: 'ciclanoStoryOverlay',
-                imageElementId: 'ciclanoStoryImage',
-                leftClickAreaId: 'ciclanoStoryLeftClick',
-                rightClickAreaId: 'ciclanoStoryRightClick',
-                reactionButtonId: 'ciclanoReactionButton',
-                reactionMenuId: 'ciclanoReactionMenu',
-                reactionHeartId: 'ciclanoReactionHeart',
-                reactionStarsId: 'ciclanoReactionStars',
-                closeButtonId: 'closeCiclanoStoryButtonTop',
-                touchStartYVar: 'ciclanoTouchStartY',
-                stories: ['img/storyciclano1.png', 'img/storyciclano2.png'],
-                currentIndex: 0,
-                nextStoryPerson: 'amigoA' // Próxima pessoa na sequência de stories
-            },
-            amigoA: {
-                circleId: 'amigoAStoryCircle',
-                overlayId: 'amigoAStoryOverlay',
-                imageElementId: 'amigoAStoryImage',
-                leftClickAreaId: 'amigoAStoryLeftClick',
-                rightClickAreaId: 'amigoAStoryRightClick',
-                reactionButtonId: 'amigoAReactionButton',
-                reactionMenuId: 'amigoAReactionMenu',
-                reactionHeartId: 'amigoAReactionHeart',
-                reactionStarsId: 'amigoAReactionStars',
-                closeButtonId: 'closeAmigoAStoryButtonTop',
-                touchStartYVar: 'amigoATouchStartY',
-                stories: ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+2'],
-                currentIndex: 0,
-                nextStoryPerson: 'amigoB',
-                prevStoryPerson: 'ciclano' // Pessoa anterior na sequência de stories
-            },
-            amigoB: {
-                circleId: 'amigoBStoryCircle',
-                overlayId: 'amigoBStoryOverlay',
-                imageElementId: 'amigoBStoryImage',
-                leftClickAreaId: 'amigoBStoryLeftClick',
-                rightClickAreaId: 'amigoBStoryRightClick',
-                reactionButtonId: 'amigoBReactionButton',
-                reactionMenuId: 'amigoBReactionMenu',
-                reactionHeartId: 'amigoBReactionHeart',
-                reactionStarsId: 'amigoBReactionStars',
-                closeButtonId: 'closeAmigoBStoryButtonTop',
-                touchStartYVar: 'amigoBTouchStartY',
-                stories: ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+2'],
-                currentIndex: 0,
-                prevStoryPerson: 'amigoA'
-            }
-        };
-
-        let activeStoryKey = null; // Para rastrear qual story está aberto
-
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const filterButton = document.getElementById('filterButton');
-            const filterMenu = document.getElementById('filterMenu');
-            const overlay = document.getElementById('overlay');
-
-            // Referências para os elementos do story da Maria
-            const mariaStoryCircle = document.getElementById('mariaStoryCircle');
-            const mariaAddButton = document.getElementById('mariaAddButton');
-            const mariaStoryOverlay = document.getElementById('mariaStoryOverlay');
-            const closeMariaStoryButton = document.getElementById('closeMariaStoryButton');
-            const mariaStoryVideo = document.getElementById('mariaStoryVideo');
-            
-            // Referências para a tela de Criar Post
-            const createPostFab = document.getElementById('createPostFab');
-            const createPostOverlay = document.getElementById('createPostOverlay');
-            const closeCreatePostButton = document.getElementById('closeCreatePostButton');
-            const publishPostButton = document.getElementById('publishPostButton');
-            const postContentInput = document.getElementById('postContentInput');
-
-            // Referências para os botões de anexar mídia
-            const attachImageButton = document.getElementById('attachImageButton');
-            const attachFileButton = document.getElementById('attachFileButton');
-            const imageFileInput = document.getElementById('imageFileInput');
-            const fileAttachmentInput = document.getElementById('fileAttachmentInput');
-            const attachedMediaPreview = document.getElementById('attachedMediaPreview');
-            const previewImage = document.getElementById('previewImage');
-            const previewFileName = document.getElementById('previewFileName');
-            let attachedFileType = null;
-            let attachedFileSrc = null;
-
-            // Referência para o título da timeline
-            const timelineTitle = document.getElementById('timelineTitle');
-            const mainHeader = document.getElementById('mainHeader');
-
-            // Overlay de Feedback de Amigo
-            const friendFeedbackOverlay = document.getElementById('friendFeedbackOverlay');
-            const feedbackMessage = document.getElementById('feedbackMessage');
-            const feedbackOkButton = document.getElementById('feedbackOkButton');
-
-            // Custom Message Box
-            const messageBox = document.getElementById('messageBox');
-            const messageText = document.getElementById('messageText');
-            const messageOkButton = document.getElementById('messageOkButton');
-
-            // --- Funções Comuns ---
-
-            // Função para mostrar uma mensagem personalizada (substitui alert)
-            function showMessage(message) {
-                messageText.textContent = message;
-                messageBox.classList.remove('hidden');
-                messageBox.classList.add('flex'); // Usa flex para centralizar
-                messageBox.style.display = 'flex'; // Garante que esteja visível
-            }
-
-            // Listener para o botão OK da mensagem personalizada
-            if (messageOkButton) {
-                messageOkButton.addEventListener('click', () => {
-                    messageBox.classList.add('hidden');
-                    messageBox.classList.remove('flex');
-                    messageBox.style.display = 'none'; // Esconde a caixa de mensagem
-                });
-            }
-
-            function toggleFilterMenu() {
-                filterMenu.classList.toggle('hidden');
-                overlay.style.display = filterMenu.classList.contains('hidden') ? 'none' : 'block';
-            }
-            
-            function stopMariaStoryCamera() {
-                if (mariaStoryLocalStream) {
-                    mariaStoryLocalStream.getTracks().forEach(track => track.stop()); // Para todas as trilhas (vídeo)
-                    mariaStoryLocalStream = null;
-                    mariaStoryVideo.srcObject = null;
-                }
-            }
-
-            function closeAllOverlays() {
-                if (activeStoryKey === 'maria') {
-                    stopMariaStoryCamera(); // Para a câmera ao fechar o story da Maria
-                }
-                for (const key in storyData) {
-                    const story = storyData[key];
-                    const overlayElement = document.getElementById(story.overlayId);
-                    if (overlayElement) {
-                        overlayElement.classList.add('hidden');
-                    }
-                    // Esconde menus de reação
-                    if (story.reactionMenuId) {
-                        const reactionMenu = document.getElementById(story.reactionMenuId);
-                        if (reactionMenu) reactionMenu.classList.add('hidden');
-                    }
-                }
-                if (createPostOverlay) createPostOverlay.classList.add('hidden');
-                if (friendFeedbackOverlay) friendFeedbackOverlay.style.display = 'none';
-                activeStoryKey = null; // Reseta o story ativo
-            }
-
-            function setupSwipeToClose(overlayElement, touchStartYVarName) {
-                overlayElement.addEventListener('touchstart', (e) => {
-                    window[touchStartYVarName] = e.touches[0].clientY;
-                });
-
-                overlayElement.addEventListener('touchmove', (e) => {
-                    const touchMoveY = e.touches[0].clientY;
-                    const diffY = touchMoveY - window[touchStartYVarName];
-                    if (diffY > 50) { // Se arrastar para baixo mais de 50px
-                        closeAllOverlays();
-                    }
-                });
-            }
-
-            // Função genérica para abrir um story
-            function openStory(storyKey) {
-                closeAllOverlays();
-                const story = storyData[storyKey];
-                activeStoryKey = storyKey;
-
-                if (story.type === 'camera') {
-                    startMariaStoryCamera();
-                } else {
-                    document.getElementById(story.overlayId).classList.remove('hidden');
-                    story.currentIndex = 0; // Sempre começa do primeiro story ao abrir
-                    document.getElementById(story.imageElementId).src = story.stories[story.currentIndex];
-                }
-            }
-
-            // Função genérica para navegar entre os stories de uma pessoa ou para a próxima/anterior
-            function navigateStory(storyKey, direction) {
-                const story = storyData[storyKey];
-                if (story.type === 'camera') return; // Stories de câmera não navegam assim
-
-                story.currentIndex += direction;
-
-                if (story.currentIndex >= story.stories.length) {
-                    // Se chegou ao final dos stories da pessoa atual, tenta ir para a próxima pessoa
-                    if (story.nextStoryPerson) {
-                        openStory(story.nextStoryPerson);
-                    } else {
-                        closeAllOverlays(); // Se não há próxima pessoa, fecha
-                    }
-                } else if (story.currentIndex < 0) {
-                    // Se voltou do início dos stories da pessoa atual, tenta ir para a pessoa anterior
-                    if (story.prevStoryPerson) {
-                        const prevStory = storyData[story.prevStoryPerson];
-                        openStory(story.prevStoryPerson);
-                        // Define o índice para a última imagem da pessoa anterior
-                        prevStory.currentIndex = prevStory.stories.length - 1;
-                        document.getElementById(prevStory.imageElementId).src = prevStory.stories[prevStory.currentIndex];
-                    } else {
-                        closeAllOverlays(); // Se não há pessoa anterior, fecha
-                    }
-                } else {
-                    // Navega para o próximo/anterior story da pessoa atual
-                    document.getElementById(story.imageElementId).src = story.stories[story.currentIndex];
-                }
-            }
-
-            // --- Lógica do Filtro ---
-            if (filterButton) {
-                filterButton.addEventListener('click', toggleFilterMenu);
-            }
-
-            if (overlay) {
-                overlay.addEventListener('click', () => {
-                    if (!filterMenu.classList.contains('hidden')) {
-                        toggleFilterMenu();
-                    }
-                });
-            }
-
-            const campusSelect = document.getElementById('campusSelect');
-            const jobFilterSwitch = document.getElementById('jobFilterSwitch');
-
-            function applyFilters() {
-                const selectedCampus = campusSelect.value;
-                const showOnlyJobs = jobFilterSwitch.checked;
-                const tweetCards = document.querySelectorAll('.tweet-card');
-
-                tweetCards.forEach(card => {
-                    const cardCampus = card.dataset.campus;
-                    const cardType = card.dataset.type;
-
-                    let isVisible = true;
-
-                    if (showOnlyJobs && cardType !== 'job-opening') {
-                        isVisible = false;
-                    }
-
-                    if (selectedCampus !== 'todos' && cardCampus !== selectedCampus) {
-                        isVisible = false;
-                    }
-
-                    if (isVisible) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-                
-                // Atualiza o título da timeline baseado nos filtros (AGORA COMO NO ANTIGO!)
-                if (showOnlyJobs) {
-                    timelineTitle.textContent = "Vagas"; // Mudado de "Vagas de Emprego" para "Vagas"
-                    mainHeader.style.backgroundColor = '#ff7a28'; // Cor laranja para vagas
-                } else if (selectedCampus !== 'todos') {
-                    timelineTitle.textContent = selectedCampus.toUpperCase(); // Mudado de "Timeline - ${selectedCampus.toUpperCase()}" para apenas o campus
-                    mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
-                } else {
-                    timelineTitle.textContent = "Timeline";
-                    mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
-                }
-            }
-
-            if (campusSelect) {
-                campusSelect.addEventListener('change', applyFilters);
-            }
-            if (jobFilterSwitch) {
-                jobFilterSwitch.addEventListener('change', applyFilters);
-            }
-
-            // --- Lógica das Estrelas de Avaliação ---
-            const starRatings = document.querySelectorAll('.star-rating');
-            starRatings.forEach(ratingContainer => {
-                const stars = ratingContainer.querySelectorAll('img');
-                stars.forEach(star => {
-                    star.addEventListener('click', function() {
-                        const value = parseInt(this.dataset.value);
-                        ratingContainer.dataset.rating = value;
-
-                        stars.forEach((s, i) => {
-                            if (i < value) {
-                                s.src = 'img/estrelapreenchida.png';
-                            } else {
-                                s.src = 'img/estrelaapagada.png';
-                            }
-                        });
-                        console.log(`Avaliação: ${value} estrelas`);
-                    });
-                });
-            });
-
-            // --- Lógica dos botões de Curtir ---
-            document.querySelectorAll('.like-icon').forEach(button => {
-                button.addEventListener('click', function() {
-                    const likeCountSpan = this.nextElementSibling;
-                    let currentLikes = parseInt(likeCountSpan.textContent);
-                    const hasLiked = likeCountSpan.dataset.liked === 'true';
-
-                    if (hasLiked) {
-                        this.src = 'img/like.png';
-                        currentLikes--;
-                        likeCountSpan.dataset.liked = 'false';
-                    } else {
-                        this.src = 'img/like2.png';
-                        currentLikes++;
-                        likeCountSpan.dataset.liked = 'true';
-                    }
-                    likeCountSpan.textContent = currentLikes;
-                });
-            });
-
-            // --- Lógica do Botão de Adicionar Amigo ---
-            document.querySelectorAll('.add-friend-icon').forEach(button => {
-                button.addEventListener('click', function() {
-                    const username = this.dataset.username;
-                    feedbackMessage.textContent = `${username} adicionado(a) aos seus amigos!`;
-                    friendFeedbackOverlay.style.display = 'flex';
-                });
-            });
-
-            if (feedbackOkButton) {
-                feedbackOkButton.addEventListener('click', function() {
-                    friendFeedbackOverlay.style.display = 'none';
-                });
-            }
-
-            // --- Lógica da Câmera no Story da Maria ---
-            async function startMariaStoryCamera() {
-                try {
-                    mariaStoryLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                    mariaStoryVideo.srcObject = mariaStoryLocalStream; // Conecta o stream ao elemento <video>
-                    mariaStoryOverlay.classList.remove('hidden'); // Mostra a overlay do story
-                    mariaStoryVideo.classList.remove('hidden'); // Garante que o vídeo esteja visível
-                } catch (error) {
-                    console.error('Erro ao acessar a câmera para o story da Maria:', error);
-                    showMessage('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
-                    mariaStoryVideo.classList.add('hidden'); // Esconde o elemento de vídeo
-                    mariaStoryOverlay.classList.remove('hidden'); // Mantém o overlay visível para o botão de fechar
-                }
-            }
-
-            // O `mariaStoryCircle` e `mariaAddButton` devem iniciar o story com a câmera.
-            if (mariaStoryCircle) {
-                mariaStoryCircle.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    openStory('maria');
-                });
-            }
-
-            if (mariaAddButton) {
-                mariaAddButton.addEventListener('click', function(event) {
-                    event.stopPropagation();
-                    openStory('maria');
-                });
-            }
-
-            if (closeMariaStoryButton) {
-                closeMariaStoryButton.addEventListener('click', closeAllOverlays);
-            }
-            if (mariaStoryOverlay) {
-                setupSwipeToClose(mariaStoryOverlay, 'mariaTouchStartY');
-            }
-
-            // --- Lógica para todos os Stories (Ciclano, Amigo A, Amigo B) ---
-            for (const key in storyData) {
-                const story = storyData[key];
-
-                // Pula a Maria, pois ela tem lógica de câmera diferente
-                if (story.type === 'camera') continue;
-
-                // Clique no círculo para abrir o story
-                const circle = document.getElementById(story.circleId);
-                if (circle) {
-                    circle.addEventListener('click', () => openStory(key));
-                }
-
-                // Botão de fechar o story
-                const closeButton = document.getElementById(story.closeButtonId);
-                if (closeButton) {
-                    closeButton.addEventListener('click', closeAllOverlays);
-                }
-
-                // Swipe para fechar o story
-                const overlayElement = document.getElementById(story.overlayId);
-                if (overlayElement) {
-                    setupSwipeToClose(overlayElement, story.touchStartYVar);
-                }
-
-                // Áreas de clique para navegação (esquerda/direita)
-                const leftClick = document.getElementById(story.leftClickAreaId);
-                const rightClick = document.getElementById(story.rightClickAreaId);
-
-                if (leftClick) {
-                    leftClick.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        navigateStory(key, -1);
-                    });
-                }
-                if (rightClick) {
-                    rightClick.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        navigateStory(key, 1);
-                    });
-                }
-
-                // Lógica do botão de reação
-                const reactionButton = document.getElementById(story.reactionButtonId);
-                const reactionMenu = document.getElementById(story.reactionMenuId);
-                const reactionHeart = document.getElementById(story.reactionHeartId);
-                const reactionStars = document.getElementById(story.reactionStarsId);
-                const storyInput = document.getElementById(story.circleId.replace('Circle', 'Input')); // Ex: ciclanoStoryInput
-                const storySendButton = document.getElementById(story.circleId.replace('Circle', 'SendButton')); // Ex: ciclanoStorySendButton
-
-                if (reactionButton) {
-                    reactionButton.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (reactionMenu) reactionMenu.classList.toggle('hidden');
-                    });
-                }
-                if (reactionHeart) {
-                    reactionHeart.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        console.log(`Reação ${key}: Coração`);
-                        if (reactionMenu) reactionMenu.classList.add('hidden');
-                    });
-                }
-                if (reactionStars) {
-                    reactionStars.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        console.log(`Reação ${key}: Estrelas`);
-                        if (reactionMenu) reactionMenu.classList.add('hidden');
-                    });
-                }
-                // Esconde o menu de reação ao clicar fora dele
-                if (overlayElement && reactionButton && reactionMenu) {
-                    overlayElement.addEventListener('click', (e) => {
-                        if (!reactionButton.contains(e.target) && !reactionMenu.contains(e.target) && !reactionMenu.classList.contains('hidden')) {
-                            reactionMenu.classList.add('hidden');
-                        }
-                    });
-                }
-
-                // Lógica de envio de mensagem no story
-                if (storyInput && storySendButton) {
-                    storySendButton.addEventListener('click', function() {
-                        if (storyInput.value.trim() !== '') {
-                            console.log(`Mensagem ${key}: ${storyInput.value}`);
-                            storyInput.value = '';
-                        }
-                    });
-                }
-            }
-
-
-            // --- Lógica da Tela de Criar Post ---
-            if (createPostFab) {
-                createPostFab.addEventListener('click', function() {
-                    closeAllOverlays();
-                    if (createPostOverlay) createPostOverlay.classList.remove('hidden');
-                    if (postContentInput) postContentInput.value = '';
-                    attachedMediaPreview.classList.add('hidden');
-                    previewImage.classList.add('hidden');
-                    previewImage.src = '';
-                    previewFileName.classList.add('hidden');
-                    previewFileName.textContent = '';
-                    attachedFileType = null;
-                    attachedFileSrc = null;
-                });
-            }
-
-            if (closeCreatePostButton) {
-                closeCreatePostButton.addEventListener('click', function() {
-                    if (createPostOverlay) createPostOverlay.classList.add('hidden');
-                });
-            }
-
-            if (attachImageButton) {
-                attachImageButton.addEventListener('click', function() {
-                    imageFileInput.click();
-                });
-            }
-
-            if (imageFileInput) {
-                imageFileInput.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            previewImage.src = e.target.result;
-                            previewImage.classList.remove('hidden');
-                            previewFileName.classList.add('hidden');
-                            attachedMediaPreview.classList.remove('hidden');
-                            attachedFileType = 'image';
-                            attachedFileSrc = e.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    } else {
-                        previewImage.classList.add('hidden');
-                        previewImage.src = '';
-                        attachedMediaPreview.classList.add('hidden');
-                        attachedFileType = null;
-                        attachedFileSrc = null;
-                    }
-                });
-            }
-
-            if (attachFileButton) {
-                attachFileButton.addEventListener('click', function() {
-                    fileAttachmentInput.click();
-                });
-            }
-
-            if (fileAttachmentInput) {
-                fileAttachmentInput.addEventListener('change', function(event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        previewFileName.textContent = `Arquivo: ${file.name}`;
-                        previewFileName.classList.remove('hidden');
-                        previewImage.classList.add('hidden');
-                        previewImage.src = '';
-                        attachedMediaPreview.classList.remove('hidden');
-                        attachedFileType = 'file';
-                        attachedFileSrc = URL.createObjectURL(file);
-                    } else {
-                        previewFileName.classList.add('hidden');
-                        previewFileName.textContent = '';
-                        attachedMediaPreview.classList.add('hidden');
-                        attachedFileType = null;
-                        attachedFileSrc = null;
-                    }
-                });
-            }
-
-            // --- Publicar Novo Post no Feed ---
-            if (publishPostButton) {
-                publishPostButton.addEventListener('click', function() {
-                    const postContent = postContentInput.value.trim();
-
-                    if (postContent === '' && !attachedFileType) {
-                        showMessage('Bicha, escreva algo ou anexe uma mídia para publicar um post!');
-                        return;
-                    }
-
-                    const mainContainer = document.getElementById('main');
-                    
-                    const newTweetCard = document.createElement('div');
-                    newTweetCard.classList.add('tweet-card', 'w-[383px]', 'border-b-2', 'border-black', 'flex', 'flex-col', 'justify-between', 'pt-2', 'pb-2', 'mx-auto', 'relative');
-                    newTweetCard.dataset.type = 'tweet';
-                    newTweetCard.dataset.campus = 'cla'; // Campus da Maria
-
-                    newTweetCard.innerHTML = `
-                        <div class="flex items-center px-2">
-                            <img src="img/maria.png" alt="Sua Foto de Perfil" class="w-[44px] h-[44px] rounded-full object-cover mr-2">
-                            <span class="font-bold text-[14px] text-gray-800">Maria - CLA - Letras</span>
-                        </div>
-                        <p class="text-[14px] text-justify text-gray-700 px-2 mt-1 mb-1 leading-tight">
-                            ${postContent}
-                        </p>
-                        ${attachedFileType === 'image' ? `<img src="${attachedFileSrc}" alt="Imagem Anexada" class="w-[370px] max-h-[200px] object-contain rounded-lg mx-auto my-2 border border-gray-300">` : ''}
-                        ${attachedFileType === 'file' ? `
-                            <div class="w-[370px] h-[52px] bg-gray-200 rounded-lg flex items-center px-2 mx-auto my-2 relative">
-                                <img src="img/clip.png" alt="Ícone de Arquivo" class="w-[40px] h-[40px] rounded object-contain mr-2">
-                                <div class="flex flex-col justify-center flex-grow">
-                                    <span class="font-bold text-[13px] text-gray-800">Arquivo Anexado:</span>
-                                    <span class="text-[13px] text-gray-800 mt-0.5 truncate">${previewFileName.textContent.replace('Arquivo: ', '')}</span>
-                                </div>
-                            </div>
-                        ` : ''}
-                        <div class="flex justify-end items-center px-2"> <div class="flex items-center">
-                                <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
-                                    onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
-                                <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">0</span>
-                            </div>
-                        </div>
-                    `;
-                    mainContainer.insertBefore(newTweetCard, mainContainer.children[2]);
-                    
-                    postContentInput.value = '';
-                    attachedMediaPreview.classList.add('hidden');
-                    previewImage.classList.add('hidden');
-                    previewImage.src = '';
-                    previewFileName.classList.add('hidden');
-                    previewFileName.textContent = '';
-                    attachedFileType = null;
-                    attachedFileSrc = null;
-                    if (createPostOverlay) createPostOverlay.classList.add('hidden');
-
-                    // Re-adiciona event listeners para os novos botões de curtir
-                    document.querySelectorAll('.like-icon').forEach(button => {
-                        button.addEventListener('click', function() {
-                            const likeCountSpan = this.nextElementSibling;
-                            let currentLikes = parseInt(likeCountSpan.textContent);
-                            const hasLiked = likeCountSpan.dataset.liked === 'true';
-
-                            if (hasLiked) {
-                                this.src = 'img/like.png';
-                                currentLikes--;
-                                likeCountSpan.dataset.liked = 'false';
-                            } else {
-                                this.src = 'img/like2.png';
-                                currentLikes++;
-                                likeCountSpan.dataset.liked = 'true';
-                            }
-                            likeCountSpan.textContent = currentLikes;
-                        });
-                    });
-                });
-            }
-
-        }); // Fim do DOMContentLoaded
-    </script>
+
+    <div class="w-[393px] h-[852px] border-4 border-black rounded-3xl
+
+                 flex flex-col bg-white shadow-xl overflow-hidden relative">
+
+        <header id="mainHeader" class="h-[75px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md transition-all duration-300">
+
+            <div class="h-full flex items-center">
+
+            <span class="text-white font-bold text-[25px]">unilink</span>
+
+            </div>
+
+
+
+            <div class="h-full flex items-center">
+
+                <a href="dm1.html">
+
+                    <img src="img/dm_icon.png" alt="Ícone de Mensagens Diretas" class=" w-[46px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/46x46/aaaaaa/FFFFFF?text=DM';"
+
+                        title="Mensagens Diretas">
+
+                </a>
+
+            </div>
+
+        </header>
+
+
+
+        <main class="flex-grow overflow-y-auto overflow-x-hidden relative z-0" id="main">
+
+            <div class="w-[179px] h-[29px] bg-[#ff6479] rounded-14px flex items-center justify-between px-2 relative mx-auto mt-4 mb-4">
+
+                <span id="timelineTitle" class="text-black font-bold text-[18px] text-left flex-grow flex-shrink-0 truncate">Timeline</span>
+
+                
+
+                <button id="filterButton" class="w-[43px] h-[22px] bg-[#ffb5a6] rounded-14px
+
+                                                 flex items-center justify-center shadow-md ml-auto flex-shrink-0">
+
+                    <img src="img/filtro_icon.png" alt="Ícone de Filtro" class="w-[15px] h-[15px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/15x15/ffb5a6/000000?text=F';"
+
+                        title="Filtro">
+
+                </button>
+
+            </div>
+
+
+
+            <div class="w-full flex flex-wrap gap-4 px-2 py-1 pb-1 justify-start">
+
+                <div id="mariaStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-black flex-shrink-0 flex items-center justify-center cursor-pointer">
+
+                    <img src="img/maria.png" alt="Story de Maria" id="mariaStoryImage" class="w-[53px] h-[53px] rounded-full object-cover"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=M';"
+
+                    >
+
+                    <div id="mariaAddButton" class="absolute bottom-0 right-0 w-[20px] h-[20px] rounded-full bg-[#000080] border-[2px] border-white flex items-center justify-center -mb-1 -mr-1 cursor-pointer">
+
+                        <span class="text-white font-bold text-sm">+</span>
+
+                    </div>
+
+                </div>
+
+
+
+                <div id="ciclanoStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
+
+                    <img src="img/ciclano.png" alt="Story do Ciclano" class="w-[53px] h-[53px] rounded-full object-cover"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/53x53/cccccc/000000?text=C';"
+
+                    >
+
+                </div>
+
+
+
+                <div id="amigoAStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
+
+                    <img src="https://placehold.co/53x53/cccccc/000000?text=A" alt="Story do Amigo A" class="w-[53px] h-[53px] rounded-full object-cover"
+
+                    >
+
+                </div>
+
+                <div id="amigoBStoryCircle" class="relative w-[63px] h-[63px] rounded-full border-[3px] border-[#000080] flex-shrink-0 flex items-center justify-center cursor-pointer">
+
+                    <img src="https://placehold.co/53x53/cccccc/000000?text=B" alt="Story do Amigo B" class="w-[53px] h-[53px] rounded-full object-cover"
+
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="ccet" data-type="tweet">
+
+                <div class="flex items-center px-2">
+
+                    <img src="img/fulano.png" alt="Foto de Perfil do Fulano" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=F';">
+
+                    <span class="font-bold text-[14px] text-gray-800">Fulano - CCET - Sistemas de Informação</span>
+
+                </div>
+
+                <p class="text-[14px] text-justify text-gray-700 px-2 mt-1 mb-1 leading-tight">
+
+                    gente, tô fazendo uma pesquisa pra IHC - Modelo de Usuário, podem responder se puderem? obrigado!
+
+                    <a href="#" class="text-[#004aad] underline">bit.ly/unilink_rio</a>
+
+                </p>
+
+                <div class="flex justify-between items-center px-2">
+
+                    <img data-username="Fulano" class="add-friend-icon w-[20px] h-[20px] object-contain cursor-pointer" src="img/adicionar.png" alt="Ícone de Adicionar" 
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
+
+                    <div class="flex items-center">
+
+                        <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
+
+                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+
+                        <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">123</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="cch" data-type="tweet">
+
+                <div class="flex items-center px-2">
+
+                    <img src="img/ciclano.png" alt="Foto de Perfil do Ciclano" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=C';">
+
+                    <span class="font-bold text-[14px] text-gray-800">Ciclano - CCH - Biblioteconomia</span>
+
+                </div>
+
+                <!-- Retângulo Verde para Música/Mídia - Revertido para o estilo antigo -->
+
+                <div class="w-[370px] h-[52px] bg-[#1ed760] rounded-lg flex items-center px-2 mx-auto my-2 relative">
+
+                    <img src="img/marinasena.png" alt="Capa da Música Marina Sena" class="w-[40px] h-[40px] rounded object-cover mr-2"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=MS';"
+
+                    >
+
+                    <div class="flex flex-col justify-center flex-grow">
+
+                        <span class="font-bold text-[13px] text-white">Escutando "Doçura (part. Çantamarta)"</span>
+
+                        <span class="text-[13px] text-white mt-0.5">De Marina Sena</span>
+
+                    </div>
+
+                    <!-- Botão de Ação no Retângulo Verde -->
+
+                    <div class="absolute right-2 top-1/2 -translate-y-1/2 w-[20px] h-[20px] rounded-full border-[1px] border-black flex items-center justify-center bg-white">
+
+                        <span class="text-black font-bold text-sm">+</span>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="star-rating flex justify-between w-[360px] mx-auto mt-1 mb-1" data-rating="0">
+
+                    <img src="img/estrelaapagada.png" alt="Estrela 1" class="w-[25px] h-[25px]" data-value="1"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+
+                    <img src="img/estrelaapagada.png" alt="Estrela 2" class="w-[25px] h-[25px]" data-value="2"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+
+                    <img src="img/estrelaapagada.png" alt="Estrela 3" class="w-[25px] h-[25px]" data-value="3"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+
+                    <img src="img/estrelaapagada.png" alt="Estrela 4" class="w-[25px] h-[25px]" data-value="4"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+
+                    <img src="img/estrelaapagada.png" alt="Estrela 5" class="w-[25px] h-[25px]" data-value="5"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=E';">
+
+                </div>
+
+            </div>
+
+
+
+            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-campus="cch" data-type="tweet">
+
+                <div class="flex items-center px-2">
+
+                    <img src="img/beltrana.png" alt="Foto de Perfil da Beltrana" class="w-[44px] h-[44px] rounded-full object-cover mr-2"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/44x44/cccccc/000000?text=B';">
+
+                    <span class="font-bold text-[14px] text-gray-800">Beltrana - CCH - História</span>
+
+                </div>
+
+                <div class="w-[370px] h-[52px] bg-gray-200 rounded-lg flex items-center px-2 mx-auto my-2 relative">
+
+                    <img src="img/folha.png" alt="Capa de Livro/Leitura" class="w-[40px] h-[40px] rounded object-cover mr-2"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=L';"
+
+                    >
+
+                    <div class="flex flex-col justify-center flex-grow">
+
+                        <span class="font-bold text-[13px] text-gray-800">Lendo "Por flores e gramados"</span>
+
+                        <span class="text-[13px] text-gray-800 mt-0.5">Por Roberta Castro</span>
+
+                    </div>
+
+                </div>
+
+                
+
+                <div class="flex justify-between items-center px-2">
+
+                    <img data-username="Beltrana" class="add-friend-icon w-[20px] h-[20px] object-contain cursor-pointer" src="img/adicionar.png" alt="Ícone de Adicionar" 
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=ADD';">
+
+                    <div class="flex items-center">
+
+                        <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
+
+                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+
+                        <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">123</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="tweet-card w-[383px] border-b-2 border-black flex flex-col justify-between pt-2 pb-2 mx-auto relative" data-type="job-opening">
+
+                <div class="flex items-center px-2">
+
+                    <div class="w-[44px] h-[44px] rounded-full bg-[#ff7a28] flex items-center justify-center mr-2">
+
+                        <img src="img/trabalho.png" alt="Ícone de Trabalho" class="w-[40px] h-[40px] object-contain"
+
+                            onerror="this.onerror=null;this.src='https://placehold.co/40x40/cccccc/000000?text=TRB';">
+
+                    </div>
+
+                    <span class="font-bold text-[14px] text-gray-800">Oportunidade de Emprego</span>
+
+                </div>
+
+                <p class="text-[14px] text-left text-gray-700 px-2 mt-1 mb-2 leading-tight">
+
+                    Vaga de Estágio como Instrutor de TI
+
+                </p>
+
+                <div class="flex justify-between items-center px-2 w-full">
+
+                    <a href="http://www.vagas.com/instrutor_ti" target="_blank" class="w-[300px] h-[22px] bg-[#b7cee8] text-blue-800 rounded-14px flex items-center justify-center text-[14px] font-bold no-underline mr-2">
+
+                        www.vagas.com/instrutor_ti
+
+                    </a>
+
+                    <div class="flex items-center flex-shrink-0">
+
+                        <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
+
+                            onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+
+                        <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">123</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="w-[300px] h-[200px] bg-transparent mx-auto"></div>
+
+        </main>
+
+
+
+        <div id="overlay" class="overlay"></div>
+
+
+
+        <div id="filterMenu" class="absolute top-[88px] left-1/2 -translate-x-1/2
+
+                                     w-[350px] h-[120px] bg-[#ffb5a6] rounded-14px
+
+                                     shadow-lg p-3 z-30 hidden flex flex-col items-start justify-between">
+
+            <div class="flex items-center justify-between w-[calc(100%-20px)] mx-auto mt-2 mb-2">
+
+                <span class="text-black font-bold text-[20px] text-gray-800">Apenas vagas de emprego:</span>
+
+                <label class="relative inline-flex items-center cursor-pointer">
+
+                    <input type="checkbox" value="" class="sr-only peer" id="jobFilterSwitch">
+
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+
+                </label>
+
+            </div>
+
+
+
+            <div class="flex items-center justify-between w-[calc(100%-20px)] mx-auto mt-2 mb-2">
+
+                <span id="campusLabel" class="text-black font-bold text-[20px]">Campus/Prédio:</span>
+
+                <select id="campusSelect" class="bg-[#e86b70] text-white rounded-md p-1 text-[18px] focus:outline-none">
+
+                    <option value="todos">Todos</option>
+
+                    <option value="cch">CCH</option>
+
+                    <option value="ccet">CCET</option>
+
+                    <option value="ccjp">CCJP</option>
+
+                    <option value="ib">IB</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between z-10">
+
+            <a href="home1.html" class="w-[78.6px] h-[60px] bg-[#657d4d] flex items-center justify-around">
+
+                <img src="img/home.png" alt="Ícone Home" class="w-[36px] h-[36px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=H';">
+
+            </a>
+
+            
+
+            <a href="usuarios.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
+
+                <img src="img/pesquisar.png" alt="Ícone Pesquisar" class="w-[36px] h-[36px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=P';">
+
+            </a>
+
+
+
+            <a href="jogaprolo.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
+
+                <img src="img/jogaprolo.png" alt="Ícone Jogaprolo" class="w-[36px] h-[36px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=J';">
+
+            </a>
+
+
+
+            <a href="agenda.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
+
+                <img src="img/agenda.png" alt="Ícone Agenda" class="w-[36px] h-[36px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=A';">
+
+            </a>
+
+
+
+            <a href="seuperfil.html" class="w-[78.6px] h-[60px] flex items-center justify-around">
+
+                <img src="img/seuperfil.png" alt="Ícone Seu Perfil" class="w-[36px] h-[36px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/36x36/cccccc/FFFFFF?text=S';">
+
+            </a>
+
+        </footer>
+
+        
+
+        <button id="createPostFab" class="absolute bottom-[80px] right-[20px] w-[50px] h-[50px] rounded-full bg-[#026dad] border-[2px] border-black flex items-center justify-center text-white text-3xl font-bold shadow-lg z-40">
+
+            +
+
+        </button>
+
+
+
+    </div>
+
+
+
+    <!-- Sobreposição para o Story da Maria (com câmera) -->
+
+    <div id="mariaStoryOverlay" class="maria-story-video-overlay hidden">
+
+        <div class="content-wrapper">
+
+            <video id="mariaStoryVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+
+            <button id="closeMariaStoryButton" class="absolute bottom-[20px] left-1/2 -translate-x-1/2 w-[148px] h-[33px] bg-[#002c5c] text-white font-bold text-[14px] rounded-14px flex items-center justify-center">
+
+                Voltar para home
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Sobreposição para o Story do Ciclano -->
+
+    <div id="ciclanoStoryOverlay" class="story-overlay hidden">
+
+        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
+
+            <button id="closeCiclanoStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
+
+                Voltar para home
+
+            </button>
+
+            <img id="ciclanoStoryImage" src="img/storyciclano1.png" 
+
+                alt="Story do Ciclano" 
+
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
+
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+CICLANO+1';">
+
+            
+
+            <div class="story-click-area left" id="ciclanoStoryLeftClick"></div>
+
+            <div class="story-click-area right" id="ciclanoStoryRightClick"></div>
+
+            
+
+            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
+
+                <input type="text" id="ciclanoStoryInput" placeholder="Digite aqui"
+
+                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <button id="ciclanoStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
+
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+            <button id="ciclanoReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
+
+                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
+
+            </button>
+
+            <div id="ciclanoReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
+
+                <button id="ciclanoReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
+
+                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
+
+                </button>
+
+                <button id="ciclanoReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
+
+                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Sobreposição para o Story do Amigo A -->
+
+    <div id="amigoAStoryOverlay" class="story-overlay hidden">
+
+        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
+
+            <button id="closeAmigoAStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
+
+                Voltar para home
+
+            </button>
+
+            <img id="amigoAStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A" 
+
+                alt="Story do Amigo A" 
+
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
+
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A';">
+
+            
+
+            <div class="story-click-area left" id="amigoAStoryLeftClick"></div>
+
+            <div class="story-click-area right" id="amigoAStoryRightClick"></div>
+
+            
+
+            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
+
+                <input type="text" id="amigoAStoryInput" placeholder="Digite aqui"
+
+                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <button id="amigoAStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
+
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+            <button id="amigoAReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
+
+                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
+
+            </button>
+
+            <div id="amigoAReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
+
+                <button id="amigoAReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
+
+                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
+
+                </button>
+
+                <button id="amigoAReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
+
+                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Sobreposição para o Story do Amigo B -->
+
+    <div id="amigoBStoryOverlay" class="story-overlay hidden">
+
+        <div class="relative w-[393px] h-[852px] flex flex-col items-center justify-between">
+
+            <button id="closeAmigoBStoryButtonTop" class="absolute top-[20px] inset-x-0 mx-auto w-[calc(100%-40px)] h-[33px] bg-red-500 text-white font-bold text-[14px] rounded-14px flex items-center justify-center z-20">
+
+                Voltar para home
+
+            </button>
+
+            <img id="amigoBStoryImage" src="https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B" 
+
+                alt="Story do Amigo B" 
+
+                class="w-full h-full border-4 border-black rounded-3xl object-cover"
+
+                onerror="this.onerror=null;this.src='https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B';">
+
+            
+
+            <div class="story-click-area left" id="amigoBStoryLeftClick"></div>
+
+            <div class="story-click-area right" id="amigoBStoryRightClick"></div>
+
+            
+
+            <div class="absolute bottom-[20px] w-[350px] flex items-center justify-between px-2">
+
+                <input type="text" id="amigoBStoryInput" placeholder="Digite aqui"
+
+                        class="flex-grow h-[36px] rounded-[18px] border-[2px] border-gray-300 px-4 text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                <button id="amigoBStorySendButton" class="w-[54px] h-[36px] bg-[#e5a1ae] rounded-[18px] border-[2px] border-black flex items-center justify-center ml-2">
+
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+            <button id="amigoBReactionButton" class="absolute right-[25px] bottom-[65px] w-[50px] h-[50px] rounded-full bg-[#e5a1ae] border-[2px] border-black flex items-center justify-center shadow-md z-10">
+
+                <img src="img/adicionarreacao.png" alt="Adicionar Reação" class="w-[33px] h-[33px] object-contain"
+
+                    onerror="this.onerror=null;this.src='https://placehold.co/33x33/e5a1ae/000000?text=R';">
+
+            </button>
+
+            <div id="amigoBReactionMenu" class="absolute right-[25px] bottom-[125px] w-[50px] h-[95px] rounded-full bg-white shadow-lg p-1 z-20 flex flex-col justify-around items-center hidden" style="border: 1px solid #e5a1ae;">
+
+                <button id="amigoBReactionHeart" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center">
+
+                    <img src="img/coracao.png" alt="Coração" class="w-[31px] h-[26px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x26/4f603e/FFFFFF?text=♥';">
+
+                </button>
+
+                <button id="amigoBReactionStars" class="w-[38px] h-[38px] rounded-full bg-[#4f603e] flex items-center justify-center mt-1">
+
+                    <img src="img/estrelinhas.png" alt="Estrelas" class="w-[31px] h-[31px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/31x31/4f603e/FFFFFF?text=★';">
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="createPostOverlay" class="create-post-overlay hidden ">
+
+        <div class="content-wrapper">
+
+            <header class="w-full h-[60px] bg-[#e5a1ae] flex items-center justify-between px-4 shadow-md z-10">
+
+                <button id="closeCreatePostButton" class="text-white text-2xl font-bold">
+
+                    ← </button>
+
+                <div class="text-white font-bold text-[25px]">unilink</div>
+
+                <button id="publishPostButton" class="text-white font-bold text-[20px]">
+
+                    Publicar Post
+
+                </button>
+
+            </header>
+
+
+
+            <main class="flex-grow p-4 bg-[#FFFFFF] ">
+
+                <textarea id="postContentInput" placeholder="O que você está fazendo?"
+
+                                 class="w-full h-[150px] rounded-[18px] border-[2px] border-gray-300 p-4 text-gray-700 text-[18px] font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 bg-blue-100"></textarea>
+
+                
+
+                <div id="attachedMediaPreview" class="mt-4 hidden">
+
+                    <img id="previewImage" src="" alt="Pré-visualização da imagem" class="max-w-full max-h-48 object-contain rounded-md mx-auto hidden">
+
+                    <p id="previewFileName" class="text-gray-700 text-center mt-2 hidden"></p>
+
+                </div>
+
+            </main>
+
+
+
+            <footer class="w-full h-[60px] bg-[#4f603e] flex items-center justify-between top-2 px-1 z-10">
+
+                <div class="flex flex-col items-center cursor-pointer" id="attachImageButton">
+
+                    <img src="img/imagem.png" alt="Adicionar Imagem" class="w-[29px] h-[29px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=IMG';">
+
+                    <span class="text-black text-[18px]">Imagem</span>
+
+                    <input type="file" id="imageFileInput" accept="image/*" class="hidden">
+
+                </div>
+
+                <div class="flex flex-col items-center cursor-pointer" id="attachBookButton">
+
+                    <img src="img/livro.png" alt="Adicionar Livro" class="w-[29px] h-[29px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=LIVRO';">
+
+                    <span class="text-black text-[18px]">Livro</span>
+
+                </div>
+
+                <div class="flex flex-col items-center cursor-pointer" id="attachMusicButton">
+
+                    <img src="img/musica.png" alt="Adicionar Música" class="w-[29px] h-[29px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=MUSICA';">
+
+                    <span class="text-black text-[18px]">Música</span>
+
+                </div>
+
+                <div class="flex flex-col items-center cursor-pointer" id="attachFileButton">
+
+                    <img src="img/clip.png" alt="Adicionar Arquivo" class="w-[29px] h-[29px] object-contain"
+
+                        onerror="this.onerror=null;this.src='https://placehold.co/29x29/cccccc/FFFFFF?text=ARQ';">
+
+                    <span class="text-black text-[18px]">Arquivo</span>
+
+                    <input type="file" id="fileAttachmentInput" class="hidden">
+
+                </div>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="friendFeedbackOverlay" class="feedback-overlay hidden">
+
+        <div class="feedback-box">
+
+            <p id="feedbackMessage" class="text-lg font-semibold mb-4"></p>
+
+            <button id="feedbackOkButton" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Ok!</button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Custom Message Box (replaces alert) -->
+
+    <div id="messageBox" class="message-box hidden">
+
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+
+            <p id="messageText" class="text-lg font-semibold mb-4"></p>
+
+            <button id="messageOkButton" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">Ok!</button>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        let mariaStoryLocalStream; // Variável para o stream da webcam do story da Maria
+
+
+
+        // Objeto para gerenciar os dados de todos os stories de forma centralizada
+
+        const storyData = {
+
+            maria: {
+
+                circleId: 'mariaStoryCircle',
+
+                overlayId: 'mariaStoryOverlay',
+
+                videoElementId: 'mariaStoryVideo', // Para o stream da câmera
+
+                closeButtonId: 'closeMariaStoryButton',
+
+                touchStartYVar: 'mariaTouchStartY',
+
+                type: 'camera' // Tipo especial para story de câmera
+
+            },
+
+            ciclano: {
+
+                circleId: 'ciclanoStoryCircle',
+
+                overlayId: 'ciclanoStoryOverlay',
+
+                imageElementId: 'ciclanoStoryImage',
+
+                leftClickAreaId: 'ciclanoStoryLeftClick',
+
+                rightClickAreaId: 'ciclanoStoryRightClick',
+
+                reactionButtonId: 'ciclanoReactionButton',
+
+                reactionMenuId: 'ciclanoReactionMenu',
+
+                reactionHeartId: 'ciclanoReactionHeart',
+
+                reactionStarsId: 'ciclanoReactionStars',
+
+                closeButtonId: 'closeCiclanoStoryButtonTop',
+
+                touchStartYVar: 'ciclanoTouchStartY',
+
+                stories: ['img/storyciclano1.png', 'img/storyciclano2.png'],
+
+                currentIndex: 0,
+
+                nextStoryPerson: 'amigoA' // Próxima pessoa na sequência de stories
+
+            },
+
+            amigoA: {
+
+                circleId: 'amigoAStoryCircle',
+
+                overlayId: 'amigoAStoryOverlay',
+
+                imageElementId: 'amigoAStoryImage',
+
+                leftClickAreaId: 'amigoAStoryLeftClick',
+
+                rightClickAreaId: 'amigoAStoryRightClick',
+
+                reactionButtonId: 'amigoAReactionButton',
+
+                reactionMenuId: 'amigoAReactionMenu',
+
+                reactionHeartId: 'amigoAReactionHeart',
+
+                reactionStarsId: 'amigoAReactionStars',
+
+                closeButtonId: 'closeAmigoAStoryButtonTop',
+
+                touchStartYVar: 'amigoATouchStartY',
+
+                stories: ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+A+2'],
+
+                currentIndex: 0,
+
+                nextStoryPerson: 'amigoB',
+
+                prevStoryPerson: 'ciclano' // Pessoa anterior na sequência de stories
+
+            },
+
+            amigoB: {
+
+                circleId: 'amigoBStoryCircle',
+
+                overlayId: 'amigoBStoryOverlay',
+
+                imageElementId: 'amigoBStoryImage',
+
+                leftClickAreaId: 'amigoBStoryLeftClick',
+
+                rightClickAreaId: 'amigoBStoryRightClick',
+
+                reactionButtonId: 'amigoBReactionButton',
+
+                reactionMenuId: 'amigoBReactionMenu',
+
+                reactionHeartId: 'amigoBReactionHeart',
+
+                reactionStarsId: 'amigoBReactionStars',
+
+                closeButtonId: 'closeAmigoBStoryButtonTop',
+
+                touchStartYVar: 'amigoBTouchStartY',
+
+                stories: ['https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+1', 'https://placehold.co/393x852/000000/FFFFFF?text=STORY+AMIGO+B+2'],
+
+                currentIndex: 0,
+
+                prevStoryPerson: 'amigoA'
+
+            }
+
+        };
+
+
+
+        let activeStoryKey = null; // Para rastrear qual story está aberto
+
+
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            const filterButton = document.getElementById('filterButton');
+
+            const filterMenu = document.getElementById('filterMenu');
+
+            const overlay = document.getElementById('overlay');
+
+
+
+            // Referências para os elementos do story da Maria
+
+            const mariaStoryCircle = document.getElementById('mariaStoryCircle');
+
+            const mariaAddButton = document.getElementById('mariaAddButton');
+
+            const mariaStoryOverlay = document.getElementById('mariaStoryOverlay');
+
+            const closeMariaStoryButton = document.getElementById('closeMariaStoryButton');
+
+            const mariaStoryVideo = document.getElementById('mariaStoryVideo');
+
+            
+
+            // Referências para a tela de Criar Post
+
+            const createPostFab = document.getElementById('createPostFab');
+
+            const createPostOverlay = document.getElementById('createPostOverlay');
+
+            const closeCreatePostButton = document.getElementById('closeCreatePostButton');
+
+            const publishPostButton = document.getElementById('publishPostButton');
+
+            const postContentInput = document.getElementById('postContentInput');
+
+
+
+            // Referências para os botões de anexar mídia
+
+            const attachImageButton = document.getElementById('attachImageButton');
+
+            const attachFileButton = document.getElementById('attachFileButton');
+
+            const imageFileInput = document.getElementById('imageFileInput');
+
+            const fileAttachmentInput = document.getElementById('fileAttachmentInput');
+
+            const attachedMediaPreview = document.getElementById('attachedMediaPreview');
+
+            const previewImage = document.getElementById('previewImage');
+
+            const previewFileName = document.getElementById('previewFileName');
+
+            let attachedFileType = null;
+
+            let attachedFileSrc = null;
+
+
+
+            // Referência para o título da timeline
+
+            const timelineTitle = document.getElementById('timelineTitle');
+
+            const mainHeader = document.getElementById('mainHeader');
+
+
+
+            // Overlay de Feedback de Amigo
+
+            const friendFeedbackOverlay = document.getElementById('friendFeedbackOverlay');
+
+            const feedbackMessage = document.getElementById('feedbackMessage');
+
+            const feedbackOkButton = document.getElementById('feedbackOkButton');
+
+
+
+            // Custom Message Box
+
+            const messageBox = document.getElementById('messageBox');
+
+            const messageText = document.getElementById('messageText');
+
+            const messageOkButton = document.getElementById('messageOkButton');
+
+
+
+            // --- Funções Comuns ---
+
+
+
+            // Função para mostrar uma mensagem personalizada (substitui alert)
+
+            function showMessage(message) {
+
+                messageText.textContent = message;
+
+                messageBox.classList.remove('hidden');
+
+                messageBox.classList.add('flex'); // Usa flex para centralizar
+
+                messageBox.style.display = 'flex'; // Garante que esteja visível
+
+            }
+
+
+
+            // Listener para o botão OK da mensagem personalizada
+
+            if (messageOkButton) {
+
+                messageOkButton.addEventListener('click', () => {
+
+                    messageBox.classList.add('hidden');
+
+                    messageBox.classList.remove('flex');
+
+                    messageBox.style.display = 'none'; // Esconde a caixa de mensagem
+
+                });
+
+            }
+
+
+
+            function toggleFilterMenu() {
+
+                filterMenu.classList.toggle('hidden');
+
+                overlay.style.display = filterMenu.classList.contains('hidden') ? 'none' : 'block';
+
+            }
+
+            
+
+            function stopMariaStoryCamera() {
+
+                if (mariaStoryLocalStream) {
+
+                    mariaStoryLocalStream.getTracks().forEach(track => track.stop()); // Para todas as trilhas (vídeo)
+
+                    mariaStoryLocalStream = null;
+
+                    mariaStoryVideo.srcObject = null;
+
+                }
+
+            }
+
+
+
+            function closeAllOverlays() {
+
+                if (activeStoryKey === 'maria') {
+
+                    stopMariaStoryCamera(); // Para a câmera ao fechar o story da Maria
+
+                }
+
+                for (const key in storyData) {
+
+                    const story = storyData[key];
+
+                    const overlayElement = document.getElementById(story.overlayId);
+
+                    if (overlayElement) {
+
+                        overlayElement.classList.add('hidden');
+
+                    }
+
+                    // Esconde menus de reação
+
+                    if (story.reactionMenuId) {
+
+                        const reactionMenu = document.getElementById(story.reactionMenuId);
+
+                        if (reactionMenu) reactionMenu.classList.add('hidden');
+
+                    }
+
+                }
+
+                if (createPostOverlay) createPostOverlay.classList.add('hidden');
+
+                if (friendFeedbackOverlay) friendFeedbackOverlay.style.display = 'none';
+
+                activeStoryKey = null; // Reseta o story ativo
+
+            }
+
+
+
+            function setupSwipeToClose(overlayElement, touchStartYVarName) {
+
+                overlayElement.addEventListener('touchstart', (e) => {
+
+                    window[touchStartYVarName] = e.touches[0].clientY;
+
+                });
+
+
+
+                overlayElement.addEventListener('touchmove', (e) => {
+
+                    const touchMoveY = e.touches[0].clientY;
+
+                    const diffY = touchMoveY - window[touchStartYVarName];
+
+                    if (diffY > 50) { // Se arrastar para baixo mais de 50px
+
+                        closeAllOverlays();
+
+                    }
+
+                });
+
+            }
+
+
+
+            // Função genérica para abrir um story
+
+            function openStory(storyKey) {
+
+                closeAllOverlays();
+
+                const story = storyData[storyKey];
+
+                activeStoryKey = storyKey;
+
+
+
+                if (story.type === 'camera') {
+
+                    startMariaStoryCamera();
+
+                } else {
+
+                    document.getElementById(story.overlayId).classList.remove('hidden');
+
+                    story.currentIndex = 0; // Sempre começa do primeiro story ao abrir
+
+                    document.getElementById(story.imageElementId).src = story.stories[story.currentIndex];
+
+                }
+
+            }
+
+
+
+            // Função genérica para navegar entre os stories de uma pessoa ou para a próxima/anterior
+
+            function navigateStory(storyKey, direction) {
+
+                const story = storyData[storyKey];
+
+                if (story.type === 'camera') return; // Stories de câmera não navegam assim
+
+
+
+                story.currentIndex += direction;
+
+
+
+                if (story.currentIndex >= story.stories.length) {
+
+                    // Se chegou ao final dos stories da pessoa atual, tenta ir para a próxima pessoa
+
+                    if (story.nextStoryPerson) {
+
+                        openStory(story.nextStoryPerson);
+
+                    } else {
+
+                        closeAllOverlays(); // Se não há próxima pessoa, fecha
+
+                    }
+
+                } else if (story.currentIndex < 0) {
+
+                    // Se voltou do início dos stories da pessoa atual, tenta ir para a pessoa anterior
+
+                    if (story.prevStoryPerson) {
+
+                        const prevStory = storyData[story.prevStoryPerson];
+
+                        openStory(story.prevStoryPerson);
+
+                        // Define o índice para a última imagem da pessoa anterior
+
+                        prevStory.currentIndex = prevStory.stories.length - 1;
+
+                        document.getElementById(prevStory.imageElementId).src = prevStory.stories[prevStory.currentIndex];
+
+                    } else {
+
+                        closeAllOverlays(); // Se não há pessoa anterior, fecha
+
+                    }
+
+                } else {
+
+                    // Navega para o próximo/anterior story da pessoa atual
+
+                    document.getElementById(story.imageElementId).src = story.stories[story.currentIndex];
+
+                }
+
+            }
+
+
+
+            // --- Lógica do Filtro ---
+
+            if (filterButton) {
+
+                filterButton.addEventListener('click', toggleFilterMenu);
+
+            }
+
+
+
+            if (overlay) {
+
+                overlay.addEventListener('click', () => {
+
+                    if (!filterMenu.classList.contains('hidden')) {
+
+                        toggleFilterMenu();
+
+                    }
+
+                });
+
+            }
+
+
+
+            const campusSelect = document.getElementById('campusSelect');
+
+            const jobFilterSwitch = document.getElementById('jobFilterSwitch');
+
+
+
+            function applyFilters() {
+
+                const selectedCampus = campusSelect.value;
+
+                const showOnlyJobs = jobFilterSwitch.checked;
+
+                const tweetCards = document.querySelectorAll('.tweet-card');
+
+
+
+                tweetCards.forEach(card => {
+
+                    const cardCampus = card.dataset.campus;
+
+                    const cardType = card.dataset.type;
+
+
+
+                    let isVisible = true;
+
+
+
+                    if (showOnlyJobs && cardType !== 'job-opening') {
+
+                        isVisible = false;
+
+                    }
+
+
+
+                    if (selectedCampus !== 'todos' && cardCampus !== selectedCampus) {
+
+                        isVisible = false;
+
+                    }
+
+
+
+                    if (isVisible) {
+
+                        card.style.display = 'flex';
+
+                    } else {
+
+                        card.style.display = 'none';
+
+                    }
+
+                });
+
+                
+
+                // Atualiza o título da timeline baseado nos filtros (AGORA COMO NO ANTIGO!)
+
+                if (showOnlyJobs) {
+
+                    timelineTitle.textContent = "Vagas"; // Mudado de "Vagas de Emprego" para "Vagas"
+
+                    mainHeader.style.backgroundColor = '#ff7a28'; // Cor laranja para vagas
+
+                } else if (selectedCampus !== 'todos') {
+
+                    timelineTitle.textContent = selectedCampus.toUpperCase(); // Mudado de "Timeline - ${selectedCampus.toUpperCase()}" para apenas o campus
+
+                    mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
+
+                } else {
+
+                    timelineTitle.textContent = "Timeline";
+
+                    mainHeader.style.backgroundColor = '#e5a1ae'; // Cor original
+
+                }
+
+            }
+
+
+
+            if (campusSelect) {
+
+                campusSelect.addEventListener('change', applyFilters);
+
+            }
+
+            if (jobFilterSwitch) {
+
+                jobFilterSwitch.addEventListener('change', applyFilters);
+
+            }
+
+
+
+            // --- Lógica das Estrelas de Avaliação ---
+
+            const starRatings = document.querySelectorAll('.star-rating');
+
+            starRatings.forEach(ratingContainer => {
+
+                const stars = ratingContainer.querySelectorAll('img');
+
+                stars.forEach(star => {
+
+                    star.addEventListener('click', function() {
+
+                        const value = parseInt(this.dataset.value);
+
+                        ratingContainer.dataset.rating = value;
+
+
+
+                        stars.forEach((s, i) => {
+
+                            if (i < value) {
+
+                                s.src = 'img/estrelapreenchida.png';
+
+                            } else {
+
+                                s.src = 'img/estrelaapagada.png';
+
+                            }
+
+                        });
+
+                        console.log(`Avaliação: ${value} estrelas`);
+
+                    });
+
+                });
+
+            });
+
+
+
+            // --- Lógica dos botões de Curtir ---
+
+            document.querySelectorAll('.like-icon').forEach(button => {
+
+                button.addEventListener('click', function() {
+
+                    const likeCountSpan = this.nextElementSibling;
+
+                    let currentLikes = parseInt(likeCountSpan.textContent);
+
+                    const hasLiked = likeCountSpan.dataset.liked === 'true';
+
+
+
+                    if (hasLiked) {
+
+                        this.src = 'img/like.png';
+
+                        currentLikes--;
+
+                        likeCountSpan.dataset.liked = 'false';
+
+                    } else {
+
+                        this.src = 'img/like2.png';
+
+                        currentLikes++;
+
+                        likeCountSpan.dataset.liked = 'true';
+
+                    }
+
+                    likeCountSpan.textContent = currentLikes;
+
+                });
+
+            });
+
+
+
+            // --- Lógica do Botão de Adicionar Amigo ---
+
+            document.querySelectorAll('.add-friend-icon').forEach(button => {
+
+                button.addEventListener('click', function() {
+
+                    const username = this.dataset.username;
+
+                    feedbackMessage.textContent = `${username} adicionado(a) aos seus amigos!`;
+
+                    friendFeedbackOverlay.style.display = 'flex';
+
+                });
+
+            });
+
+
+
+            if (feedbackOkButton) {
+
+                feedbackOkButton.addEventListener('click', function() {
+
+                    friendFeedbackOverlay.style.display = 'none';
+
+                });
+
+            }
+
+
+
+            // --- Lógica da Câmera no Story da Maria ---
+
+            async function startMariaStoryCamera() {
+
+                try {
+
+                    mariaStoryLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+                    mariaStoryVideo.srcObject = mariaStoryLocalStream; // Conecta o stream ao elemento <video>
+
+                    mariaStoryOverlay.classList.remove('hidden'); // Mostra a overlay do story
+
+                    mariaStoryVideo.classList.remove('hidden'); // Garante que o vídeo esteja visível
+
+                } catch (error) {
+
+                    console.error('Erro ao acessar a câmera para o story da Maria:', error);
+
+                    showMessage('Amada, não consegui acessar sua câmera para o story! Tem certeza que deu permissão?');
+
+                    mariaStoryVideo.classList.add('hidden'); // Esconde o elemento de vídeo
+
+                    mariaStoryOverlay.classList.remove('hidden'); // Mantém o overlay visível para o botão de fechar
+
+                }
+
+            }
+
+
+
+            // O `mariaStoryCircle` e `mariaAddButton` devem iniciar o story com a câmera.
+
+            if (mariaStoryCircle) {
+
+                mariaStoryCircle.addEventListener('click', function(event) {
+
+                    event.stopPropagation();
+
+                    openStory('maria');
+
+                });
+
+            }
+
+
+
+            if (mariaAddButton) {
+
+                mariaAddButton.addEventListener('click', function(event) {
+
+                    event.stopPropagation();
+
+                    openStory('maria');
+
+                });
+
+            }
+
+
+
+            if (closeMariaStoryButton) {
+
+                closeMariaStoryButton.addEventListener('click', closeAllOverlays);
+
+            }
+
+            if (mariaStoryOverlay) {
+
+                setupSwipeToClose(mariaStoryOverlay, 'mariaTouchStartY');
+
+            }
+
+
+
+            // --- Lógica para todos os Stories (Ciclano, Amigo A, Amigo B) ---
+
+            for (const key in storyData) {
+
+                const story = storyData[key];
+
+
+
+                // Pula a Maria, pois ela tem lógica de câmera diferente
+
+                if (story.type === 'camera') continue;
+
+
+
+                // Clique no círculo para abrir o story
+
+                const circle = document.getElementById(story.circleId);
+
+                if (circle) {
+
+                    circle.addEventListener('click', () => openStory(key));
+
+                }
+
+
+
+                // Botão de fechar o story
+
+                const closeButton = document.getElementById(story.closeButtonId);
+
+                if (closeButton) {
+
+                    closeButton.addEventListener('click', closeAllOverlays);
+
+                }
+
+
+
+                // Swipe para fechar o story
+
+                const overlayElement = document.getElementById(story.overlayId);
+
+                if (overlayElement) {
+
+                    setupSwipeToClose(overlayElement, story.touchStartYVar);
+
+                }
+
+
+
+                // Áreas de clique para navegação (esquerda/direita)
+
+                const leftClick = document.getElementById(story.leftClickAreaId);
+
+                const rightClick = document.getElementById(story.rightClickAreaId);
+
+
+
+                if (leftClick) {
+
+                    leftClick.addEventListener('click', (e) => {
+
+                        e.stopPropagation();
+
+                        navigateStory(key, -1);
+
+                    });
+
+                }
+
+                if (rightClick) {
+
+                    rightClick.addEventListener('click', (e) => {
+
+                        e.stopPropagation();
+
+                        navigateStory(key, 1);
+
+                    });
+
+                }
+
+
+
+                // Lógica do botão de reação
+
+                const reactionButton = document.getElementById(story.reactionButtonId);
+
+                const reactionMenu = document.getElementById(story.reactionMenuId);
+
+                const reactionHeart = document.getElementById(story.reactionHeartId);
+
+                const reactionStars = document.getElementById(story.reactionStarsId);
+
+                const storyInput = document.getElementById(story.circleId.replace('Circle', 'Input')); // Ex: ciclanoStoryInput
+
+                const storySendButton = document.getElementById(story.circleId.replace('Circle', 'SendButton')); // Ex: ciclanoStorySendButton
+
+
+
+                if (reactionButton) {
+
+                    reactionButton.addEventListener('click', (e) => {
+
+                        e.stopPropagation();
+
+                        if (reactionMenu) reactionMenu.classList.toggle('hidden');
+
+                    });
+
+                }
+
+                if (reactionHeart) {
+
+                    reactionHeart.addEventListener('click', (e) => {
+
+                        e.stopPropagation();
+
+                        console.log(`Reação ${key}: Coração`);
+
+                        if (reactionMenu) reactionMenu.classList.add('hidden');
+
+                    });
+
+                }
+
+                if (reactionStars) {
+
+                    reactionStars.addEventListener('click', (e) => {
+
+                        e.stopPropagation();
+
+                        console.log(`Reação ${key}: Estrelas`);
+
+                        if (reactionMenu) reactionMenu.classList.add('hidden');
+
+                    });
+
+                }
+
+                // Esconde o menu de reação ao clicar fora dele
+
+                if (overlayElement && reactionButton && reactionMenu) {
+
+                    overlayElement.addEventListener('click', (e) => {
+
+                        if (!reactionButton.contains(e.target) && !reactionMenu.contains(e.target) && !reactionMenu.classList.contains('hidden')) {
+
+                            reactionMenu.classList.add('hidden');
+
+                        }
+
+                    });
+
+                }
+
+
+
+                // Lógica de envio de mensagem no story
+
+                if (storyInput && storySendButton) {
+
+                    storySendButton.addEventListener('click', function() {
+
+                        if (storyInput.value.trim() !== '') {
+
+                            console.log(`Mensagem ${key}: ${storyInput.value}`);
+
+                            storyInput.value = '';
+
+                        }
+
+                    });
+
+                }
+
+            }
+
+
+
+
+
+            // --- Lógica da Tela de Criar Post ---
+
+            if (createPostFab) {
+
+                createPostFab.addEventListener('click', function() {
+
+                    closeAllOverlays();
+
+                    if (createPostOverlay) createPostOverlay.classList.remove('hidden');
+
+                    if (postContentInput) postContentInput.value = '';
+
+                    attachedMediaPreview.classList.add('hidden');
+
+                    previewImage.classList.add('hidden');
+
+                    previewImage.src = '';
+
+                    previewFileName.classList.add('hidden');
+
+                    previewFileName.textContent = '';
+
+                    attachedFileType = null;
+
+                    attachedFileSrc = null;
+
+                });
+
+            }
+
+
+
+            if (closeCreatePostButton) {
+
+                closeCreatePostButton.addEventListener('click', function() {
+
+                    if (createPostOverlay) createPostOverlay.classList.add('hidden');
+
+                });
+
+            }
+
+
+
+            if (attachImageButton) {
+
+                attachImageButton.addEventListener('click', function() {
+
+                    imageFileInput.click();
+
+                });
+
+            }
+
+
+
+            if (imageFileInput) {
+
+                imageFileInput.addEventListener('change', function(event) {
+
+                    const file = event.target.files[0];
+
+                    if (file) {
+
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+
+                            previewImage.src = e.target.result;
+
+                            previewImage.classList.remove('hidden');
+
+                            previewFileName.classList.add('hidden');
+
+                            attachedMediaPreview.classList.remove('hidden');
+
+                            attachedFileType = 'image';
+
+                            attachedFileSrc = e.target.result;
+
+                        };
+
+                        reader.readAsDataURL(file);
+
+                    } else {
+
+                        previewImage.classList.add('hidden');
+
+                        previewImage.src = '';
+
+                        attachedMediaPreview.classList.add('hidden');
+
+                        attachedFileType = null;
+
+                        attachedFileSrc = null;
+
+                    }
+
+                });
+
+            }
+
+
+
+            if (attachFileButton) {
+
+                attachFileButton.addEventListener('click', function() {
+
+                    fileAttachmentInput.click();
+
+                });
+
+            }
+
+
+
+            if (fileAttachmentInput) {
+
+                fileAttachmentInput.addEventListener('change', function(event) {
+
+                    const file = event.target.files[0];
+
+                    if (file) {
+
+                        previewFileName.textContent = `Arquivo: ${file.name}`;
+
+                        previewFileName.classList.remove('hidden');
+
+                        previewImage.classList.add('hidden');
+
+                        previewImage.src = '';
+
+                        attachedMediaPreview.classList.remove('hidden');
+
+                        attachedFileType = 'file';
+
+                        attachedFileSrc = URL.createObjectURL(file);
+
+                    } else {
+
+                        previewFileName.classList.add('hidden');
+
+                        previewFileName.textContent = '';
+
+                        attachedMediaPreview.classList.add('hidden');
+
+                        attachedFileType = null;
+
+                        attachedFileSrc = null;
+
+                    }
+
+                });
+
+            }
+
+
+
+            // --- Publicar Novo Post no Feed ---
+
+            if (publishPostButton) {
+
+                publishPostButton.addEventListener('click', function() {
+
+                    const postContent = postContentInput.value.trim();
+
+
+
+                    if (postContent === '' && !attachedFileType) {
+
+                        showMessage('Bicha, escreva algo ou anexe uma mídia para publicar um post!');
+
+                        return;
+
+                    }
+
+
+
+                    const mainContainer = document.getElementById('main');
+
+                    
+
+                    const newTweetCard = document.createElement('div');
+
+                    newTweetCard.classList.add('tweet-card', 'w-[383px]', 'border-b-2', 'border-black', 'flex', 'flex-col', 'justify-between', 'pt-2', 'pb-2', 'mx-auto', 'relative');
+
+                    newTweetCard.dataset.type = 'tweet';
+
+                    newTweetCard.dataset.campus = 'cla'; // Campus da Maria
+
+
+
+                    newTweetCard.innerHTML = `
+
+                        <div class="flex items-center px-2">
+
+                            <img src="img/maria.png" alt="Sua Foto de Perfil" class="w-[44px] h-[44px] rounded-full object-cover mr-2">
+
+                            <span class="font-bold text-[14px] text-gray-800">Maria - CLA - Letras</span>
+
+                        </div>
+
+                        <p class="text-[14px] text-justify text-gray-700 px-2 mt-1 mb-1 leading-tight">
+
+                            ${postContent}
+
+                        </p>
+
+                        ${attachedFileType === 'image' ? `<img src="${attachedFileSrc}" alt="Imagem Anexada" class="w-[370px] max-h-[200px] object-contain rounded-lg mx-auto my-2 border border-gray-300">` : ''}
+
+                        ${attachedFileType === 'file' ? `
+
+                            <div class="w-[370px] h-[52px] bg-gray-200 rounded-lg flex items-center px-2 mx-auto my-2 relative">
+
+                                <img src="img/clip.png" alt="Ícone de Arquivo" class="w-[40px] h-[40px] rounded object-contain mr-2">
+
+                                <div class="flex flex-col justify-center flex-grow">
+
+                                    <span class="font-bold text-[13px] text-gray-800">Arquivo Anexado:</span>
+
+                                    <span class="text-[13px] text-gray-800 mt-0.5 truncate">${previewFileName.textContent.replace('Arquivo: ', '')}</span>
+
+                                </div>
+
+                            </div>
+
+                        ` : ''}
+
+                        <div class="flex justify-end items-center px-2"> <div class="flex items-center">
+
+                                <img class="like-icon w-[20px] h-[20px] object-contain mr-1 cursor-pointer" src="img/like.png" alt="Ícone de Curtir"
+
+                                    onerror="this.onerror=null;this.src='https://placehold.co/20x20/cccccc/000000?text=LIKE';">
+
+                                <span class="like-count font-bold text-[11px] text-gray-800" data-liked="false">0</span>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                    mainContainer.insertBefore(newTweetCard, mainContainer.children[2]);
+
+                    
+
+                    postContentInput.value = '';
+
+                    attachedMediaPreview.classList.add('hidden');
+
+                    previewImage.classList.add('hidden');
+
+                    previewImage.src = '';
+
+                    previewFileName.classList.add('hidden');
+
+                    previewFileName.textContent = '';
+
+                    attachedFileType = null;
+
+                    attachedFileSrc = null;
+
+                    if (createPostOverlay) createPostOverlay.classList.add('hidden');
+
+
+
+                    // Re-adiciona event listeners para os novos botões de curtir
+
+                    document.querySelectorAll('.like-icon').forEach(button => {
+
+                        button.addEventListener('click', function() {
+
+                            const likeCountSpan = this.nextElementSibling;
+
+                            let currentLikes = parseInt(likeCountSpan.textContent);
+
+                            const hasLiked = likeCountSpan.dataset.liked === 'true';
+
+
+
+                            if (hasLiked) {
+
+                                this.src = 'img/like.png';
+
+                                currentLikes--;
+
+                                likeCountSpan.dataset.liked = 'false';
+
+                            } else {
+
+                                this.src = 'img/like2.png';
+
+                                currentLikes++;
+
+                                likeCountSpan.dataset.liked = 'true';
+
+                            }
+
+                            likeCountSpan.textContent = currentLikes;
+
+                        });
+
+                    });
+
+                });
+
+            }
+
+
+
+        }); // Fim do DOMContentLoaded
+
+    </script>
+
 </body>
+
 </html>
